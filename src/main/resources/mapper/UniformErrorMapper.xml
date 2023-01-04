@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.leo.electricitysystem.mapper.UniformErrorMapper">
+
+    <select id="selectUniformErrorAndNameByUserId" resultType="map">
+        -- 查看worker ID = 3的工人的姓名和着装错误
+        SELECT ue.description,
+               u.user_name
+        from
+            uniform_error ue
+                LEFT JOIN sys_user u on ue.worker_id = u.id
+        WHERE worker_id = #{userId};
+    </select>
+
+
+</mapper>
