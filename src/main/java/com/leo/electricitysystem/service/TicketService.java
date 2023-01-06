@@ -8,6 +8,7 @@ import com.leo.electricitysystem.mapper.CabinetMapper;
 import com.leo.electricitysystem.mapper.SwitchMapper;
 import com.leo.electricitysystem.mapper.TicketMapper;
 import com.leo.electricitysystem.mapper.UserMapper;
+import com.leo.electricitysystem.request.FullTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.context.support.SecurityWebApplicationContextUtils;
 import org.springframework.stereotype.Service;
@@ -95,6 +96,15 @@ public class TicketService {
         }
         return supervisor;
     }
+
+    public void writeTicket(FullTicket fullTicket){
+        ticketMapper.insertTicket(fullTicket);
+        List<String> steps = fullTicket.getSteps();
+        for(int i = 1;i<=steps.size();i++){
+            ticketMapper.insertSteps(i, steps.get(i - 1),fullTicket.getTicketId());
+        }
+    }
+
 
 
 

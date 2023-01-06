@@ -3,10 +3,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.leo.electricitysystem.mapper.TicketMapper">
-<!--    TODO: insert ticket mapper-->
-<!--    <insert id="insertTicket">-->
-<!--        inser-->
-<!--    </insert>-->
+
+    <insert id="insertTicket" useGeneratedKeys="true">
+        <selectKey keyProperty="ticketId" keyColumn="ticket_id" order="AFTER" resultType="Long">
+            select last_insert_id()
+        </selectKey>
+       -- 插入操作票
+        INSERT into operation_ticket(create_time,task_name,admin_name,worker_name,supervisor_name)
+        VALUES (now(),#{taskName},#{adminName},#{workerName},#{supervisorName});
+    </insert>
+
+    <insert id="insertSteps">
+        -- 插入步骤
+        INSERT into operation_steps(description,step_order,ticket_id)
+        VALUES (#{description},#{stepOrder},#{ticketId})
+    </insert>
 
     <select id="findAllStepsByAdminId" resultType="com.leo.electricitysystem.domain.OperationSteps">
         -- 查看 leo 的管理员下发的操作票所有步骤

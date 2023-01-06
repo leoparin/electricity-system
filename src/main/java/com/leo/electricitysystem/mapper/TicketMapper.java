@@ -3,6 +3,7 @@ package com.leo.electricitysystem.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leo.electricitysystem.domain.OperationSteps;
 import com.leo.electricitysystem.domain.OperationTickets;
+import com.leo.electricitysystem.request.FullTicket;
 import org.apache.ibatis.annotations.MapKey;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +25,7 @@ public interface TicketMapper extends BaseMapper<OperationTickets> {
     List<OperationSteps> findAllStepsByAdminId(Long id);
 
     //TODO: 写操作票，需要同时更新steps表和ticket表
-    // void insertTicket(Long id,List<String> steps);
+    void insertTicket(FullTicket fullTicket);
 
-    //todo:
+    void insertSteps(int stepOrder,String description,Long ticketId);
 }
