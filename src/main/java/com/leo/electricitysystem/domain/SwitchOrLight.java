@@ -14,7 +14,7 @@ import lombok.Data;
  **/
 @Data
 @TableName("switches_light")
-public class SwitchesAndLights {
+public class SwitchOrLight {
 
 
     /*

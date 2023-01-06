@@ -1,7 +1,7 @@
 package com.leo.electricitysystem.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.leo.electricitysystem.domain.OperationSteps;
+import com.leo.electricitysystem.domain.OperationStep;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,5 +13,5 @@ import org.springframework.stereotype.Repository;
  * @Author leo
  **/
 @Repository
-public interface StepMapper extends BaseMapper<OperationSteps> {
+public interface StepMapper extends BaseMapper<OperationStep> {
 }

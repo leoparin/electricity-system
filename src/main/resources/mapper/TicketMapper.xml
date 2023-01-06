@@ -3,21 +3,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.leo.electricitysystem.mapper.TicketMapper">
-<!--    TODO: insert ticket mapper-->
-<!--    <insert id="insertTicket">-->
-<!--        inser-->
-<!--    </insert>-->
 
-    <select id="findAllStepsByAdminId" resultType="com.leo.electricitysystem.domain.OperationSteps">
-        -- 查看 leo 的管理员下发的操作票所有步骤
-        SELECT
-            os.step_order,
-            os.description
-        FROM sys_user u
-                 LEFT JOIN operation_ticket ot on ot.admin_id = u.id
-                 LEFT JOIN operation_steps os on ot.id = os.ticket_id
-        WHERE
-            u.id= #{userId}
-        ORDER BY os.step_order;
+    <insert id="insertTicket" useGeneratedKeys="true">
+        <selectKey keyProperty="ticketId" keyColumn="ticket_id" order="AFTER" resultType="Long">
+            select last_insert_id()
+        </selectKey>
+       -- 插入操作票
+        INSERT into operation_ticket(create_time,task_name,admin_name,worker_name,supervisor_name)
+        VALUES (now(),#{taskName},#{adminName},#{workerName},#{supervisorName});
+    </insert>
+
+    <insert id="insertSteps">
+        -- 插入步骤
+        INSERT into operation_steps(description,step_order,ticket_id)
+        VALUES (#{description},#{stepOrder},#{ticketId})
+    </insert>
+
+<!---->
+<!--    <select id="findAllStepsByAdminId" resultType="com.leo.electricitysystem.domain.OperationStep">-->
+<!--        &#45;&#45; 查看 id=1 的管理员下发的操作票所有步骤-->
+<!--        SELECT-->
+<!--            os.step_order,-->
+<!--            os.description-->
+<!--        FROM sys_user u-->
+<!--                 LEFT JOIN operation_ticket ot on ot.admin_id = u.id-->
+<!--                 LEFT JOIN operation_steps os on ot.id = os.ticket_id-->
+<!--        WHERE-->
+<!--            u.id= #{userId}-->
+<!--        ORDER BY os.step_order;-->
+<!--    </select>-->
+
+
+    <select id="selectTicketPageByUserID" resultType="com.leo.electricitysystem.domain.OperationTicket">
+        -- 根据用户id分页查询操作票（管理员，工人）
+        SELECT * from operation_ticket
+        <choose>
+        <when test="loginUser.userType == '工人'">
+            where #{loginUser.id} = worker_id
+        </when>
+        <otherwise>
+            where #{loginUser.id} = admin_id
+        </otherwise>
+        </choose>
+        LIMIT #{offset},3;
     </select>
+
+
 </mapper>

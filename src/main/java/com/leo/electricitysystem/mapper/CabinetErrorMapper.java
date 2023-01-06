@@ -1,17 +1,17 @@
 package com.leo.electricitysystem.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.leo.electricitysystem.domain.SwitchOrLight;
+import com.leo.electricitysystem.domain.CabinetError;
 import org.springframework.stereotype.Repository;
 
 /**
- * ClassName:SwitchMapper
+ * ClassName:CabinetErrorMapper
  * PackageName:com.leo.electricitysystem.mapper
  * Description:
  *
- * @Date 2023/1/4 10:40
+ * @Date 2023/1/8 08:37
  * @Author leo
  **/
 @Repository
-public interface SwitchMapper extends BaseMapper<SwitchOrLight> {
+public interface CabinetErrorMapper extends BaseMapper<CabinetError> {
 }

@@ -5,33 +5,25 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * ClassName:OperationSteps
+ * ClassName:CabinetError
  * PackageName:com.leo.electricitysystem.domain
  * Description:
  *
- * @Date 2023/1/4 14:46
+ * @Date 2023/1/8 08:18
  * @Author leo
  **/
 @Data
-@TableName("operation_steps")
-public class OperationSteps {
-
+@TableName("cabinet_error")
+public class CabinetError {
+//TODO: cabinetError 注释
     @TableId
     private Long id;
 
-    /**
-     * 具体描述
-     */
     private String description;
 
-    /*
-     * 所属操作票id
-     */
-    private Long ticketId;
+    private String errorStatus;
 
-    /*
-     * 步骤序号
-     */
-    private int stepOrder;
+    private Long workerId;
 
+    private String workerName;
 }

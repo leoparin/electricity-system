@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -63,9 +62,9 @@ public class MapperTest {
 
     @Test
     void selectAllSwitches(){
-        List<SwitchesAndLights> switches ;
-        LambdaQueryWrapper<SwitchesAndLights> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(SwitchesAndLights::getId,SwitchesAndLights::getSwitchName);
+        List<SwitchOrLight> switches ;
+        LambdaQueryWrapper<SwitchOrLight> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(SwitchOrLight::getId, SwitchOrLight::getSwitchName);
         switches = switchMapper.selectList(queryWrapper);
         if(Objects.isNull(switches)){
             throw new RuntimeException("数据库中无开关");
@@ -93,9 +92,9 @@ public class MapperTest {
 
     @Test
     void selectAllTickets() {
-        List<OperationTickets> tickets;
-        LambdaQueryWrapper<OperationTickets> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(OperationTickets::getId,OperationTickets::getCreateTime);
+        List<OperationTicket> tickets;
+        LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(OperationTicket::getId, OperationTicket::getCreateTime);
         tickets = ticketMapper.selectList(queryWrapper);
         if(Objects.isNull(tickets)){
             throw new RuntimeException("数据库中无操作票");
@@ -105,9 +104,9 @@ public class MapperTest {
 
     @Test
     void selectOngoingTicket(){
-        List<OperationTickets> tickets;
-        LambdaQueryWrapper<OperationTickets> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(OperationTickets::getId,OperationTickets::getCreateTime);
+        List<OperationTicket> tickets;
+        LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(OperationTicket::getId, OperationTicket::getCreateTime);
         tickets = ticketMapper.selectList(queryWrapper);
         if(Objects.isNull(tickets)){
             throw new RuntimeException("数据库中无操作票");
@@ -125,10 +124,10 @@ public class MapperTest {
      */
     @Test
     void selectAllStepsByTicketId(){
-        List<OperationSteps> steps;
-        LambdaQueryWrapper<OperationSteps> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(OperationSteps::getId,OperationSteps::getDescription)
-                .eq(OperationSteps::getTicketId,"1");
+        List<OperationStep> steps;
+        LambdaQueryWrapper<OperationStep> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(OperationStep::getId, OperationStep::getDescription)
+                .eq(OperationStep::getTicketId,"1");
         steps = stepMapper.selectList(queryWrapper);
         if(Objects.isNull(steps)){
             throw new RuntimeException("操作票中无数据");
@@ -136,13 +135,13 @@ public class MapperTest {
         System.out.println(steps);
     }
 
-    @Test
-    void selectAllStepsByAdminId(){
-        List<OperationSteps> steps;
-        steps = ticketMapper.findAllStepsByAdminId(1L);
-        System.out.println(steps);
-        //返回类型是Map的List，Map里面全部用String封装
-    }
+//    @Test
+//    void selectAllStepsByAdminId(){
+//        List<OperationStep> steps;
+//        steps = ticketMapper.findAllStepsByAdminId(1L);
+//        System.out.println(steps);
+//        //返回类型是Map的List，Map里面全部用String封装
+//    }
 
     /*
      * 查询工人ID=3的所有着装错误
@@ -191,4 +190,6 @@ public class MapperTest {
         }
         System.out.println(error);
     }
+
+
 }

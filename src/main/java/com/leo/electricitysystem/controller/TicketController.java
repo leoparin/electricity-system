@@ -1,10 +1,10 @@
 package com.leo.electricitysystem.controller;
 
+import com.leo.electricitysystem.request.FullTicket;
+import com.leo.electricitysystem.response.ResponseResult;
 import com.leo.electricitysystem.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,5 +46,15 @@ public class TicketController {
         return  ticketService.getAllSupervisor();
     }
 
+    @PostMapping("/write")
+    public ResponseResult writeTicket(FullTicket fullTicket){
+        return ticketService.writeTicket(fullTicket);
+    }
+
+    @GetMapping("/getAdminAllTicket/{adminName}")
+    public ResponseResult getAdminTicket(@PathVariable String adminName){
+        //使用mp根据id查
+        return ticketService.getTicketRecord();
+    }
 
 }

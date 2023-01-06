@@ -1,14 +1,14 @@
 package com.leo.electricitysystem.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.leo.electricitysystem.domain.OperationSteps;
-import com.leo.electricitysystem.domain.OperationTickets;
-import org.apache.ibatis.annotations.MapKey;
+import com.leo.electricitysystem.domain.LoginUser;
+import com.leo.electricitysystem.domain.OperationStep;
+import com.leo.electricitysystem.domain.OperationTicket;
+import com.leo.electricitysystem.request.FullTicket;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ClassName:TicketMapper.xml
@@ -19,12 +19,16 @@ import java.util.Map;
  * @Author leo
  **/
 @Repository
-public interface TicketMapper extends BaseMapper<OperationTickets> {
+public interface TicketMapper extends BaseMapper<OperationTicket> {
 
-    List<OperationSteps> findAllStepsByAdminId(Long id);
+    /*
+     * TODO : 根据操作票id查看操作票详情
+     */
+    //List<OperationStep> findAllStepsByAdminId(Long id);
 
-    //TODO: 写操作票，需要同时更新steps表和ticket表
-    // void insertTicket(Long id,List<String> steps);
+    void insertTicket(FullTicket fullTicket);
 
-    //todo:
+    void insertSteps(int stepOrder,String description,Long ticketId);
+
+    List<OperationTicket> selectTicketPageByUserID(int offset,LoginUser loginUser);
 }

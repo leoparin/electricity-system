@@ -17,7 +17,7 @@ import java.util.Date;
  **/
 @Data
 @TableName("operation_ticket")
-public class OperationTickets {
+public class OperationTicket {
 
     @TableId
     private Long id;
