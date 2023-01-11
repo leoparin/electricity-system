@@ -25,13 +25,16 @@ public class OperationTicket {
     /*
      * 创建日期
      */
-    @JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss”,timezone=“GMT+8")
-    private Date createTime;
+    private String createTime;
 
     /*
      * 管理员id
      */
     private Long adminId;
+
+    private String adminName;
+
+    private String workerName;
 
     /*
      * 工人id
@@ -41,6 +44,10 @@ public class OperationTicket {
     /*
      * 监督员id
      */
-    private Long supervisorId;
+    private String supervisorName;
+
+    private String completeStatus;
+
+    private String taskName;
 }
 

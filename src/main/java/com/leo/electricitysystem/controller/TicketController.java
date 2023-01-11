@@ -1,11 +1,14 @@
 package com.leo.electricitysystem.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.leo.electricitysystem.request.FullTicket;
 import com.leo.electricitysystem.response.ResponseResult;
 import com.leo.electricitysystem.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.PublicKey;
 import java.util.List;
 
 /**
@@ -27,34 +30,44 @@ public class TicketController {
      * @return 开关List
      */
     @GetMapping("/switch")
-    List<String> getSwitch(){
+    public ResponseResult getSwitch(){
        return  ticketService.getAllSwitch();
     }
 
     @GetMapping("/cabinet")
-    List<String> getCabinet(){
+    public ResponseResult getCabinet(){
         return  ticketService.getAllCabinet();
     }
 
     @GetMapping("/worker")
-    List<String> getWorker(){
+    public ResponseResult getWorker(){
         return  ticketService.getAllWorker();
     }
 
     @GetMapping("/supervisor")
-    List<String> getSupervisor(){
+    public ResponseResult getSupervisor(){
         return  ticketService.getAllSupervisor();
     }
 
     @PostMapping("/write")
-    public ResponseResult writeTicket(FullTicket fullTicket){
-        return ticketService.writeTicket(fullTicket);
+    public ResponseResult saveTicket(@RequestBody FullTicket fullTicket){
+        return ticketService.saveTicket(fullTicket);
     }
 
     @GetMapping("/getAdminAllTicket/{adminName}")
     public ResponseResult getAdminTicket(@PathVariable String adminName){
         //使用mp根据id查
-        return ticketService.getTicketRecord();
+        return ticketService.getTicketList();
+    }
+
+    @GetMapping("/conditionSelect/{status}")
+    public ResponseResult getTicketByStatus(@PathVariable  String status){
+        return ticketService.getTicketByStatus(status);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseResult delete(@PathVariable Long id){
+        return ticketService.delete(id);
     }
 
 }

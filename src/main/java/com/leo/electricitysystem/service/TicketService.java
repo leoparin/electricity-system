@@ -40,30 +40,29 @@ public class TicketService {
     @Autowired
     private SwitchMapper switchMapper;
 
-    public List<String> getAllSwitch(){
-        List<String> switches;
+    public ResponseResult getAllSwitch(){
+        List<SwitchOrLight> switches;
         LambdaQueryWrapper<SwitchOrLight> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(SwitchOrLight::getSwitchName);
-        switches =switchMapper.selectList(queryWrapper).stream()
-                .map(SwitchOrLight::getSwitchName).collect(Collectors.toList());
+        queryWrapper.select(SwitchOrLight::getId,SwitchOrLight::getSwitchName);
+        switches =switchMapper.selectList(queryWrapper);
         if(Objects.isNull(switches)){
             throw new RuntimeException("数据库中无开关");
         }
-       return switches;
+        return new ResponseResult(HttpStatus.OK.value(),switches);
     }
 
     @Autowired
     private CabinetMapper cabinetMapper;
-    public List<String> getAllCabinet() {
-        List<String> cabinet;
+    public ResponseResult getAllCabinet() {
+        Map<Long,String> cabinet;
         LambdaQueryWrapper<ElectricCabinet> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(ElectricCabinet::getCabinetName);
+        queryWrapper.select(ElectricCabinet::getId,ElectricCabinet::getCabinetName);
         cabinet =cabinetMapper.selectList(queryWrapper).stream()
-                .map(ElectricCabinet::getCabinetName).collect(Collectors.toList());
+                .collect(Collectors.toMap(ElectricCabinet::getId, ElectricCabinet::getCabinetName));
         if(Objects.isNull(cabinet)){
             throw new RuntimeException("数据库中无操作柜");
         }
-        return cabinet;
+        return new ResponseResult(HttpStatus.OK.value(),cabinet);
     }
 
     @Autowired
@@ -71,35 +70,36 @@ public class TicketService {
     /*
      * @return workerName List
      */
-    public List<String>getAllWorker(){
-        List<String> worker;
+    public ResponseResult getAllWorker(){
+        Map<Long,String> worker;
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(User::getUserName).eq(User::getUserType,"2");
-        worker =userMapper.selectList(queryWrapper).stream()
-                .map(User::getUserName).collect(Collectors.toList());
+        queryWrapper.select(User::getId,User::getUserName)
+                .eq(User::getUserType,"工人");
+        worker = userMapper.selectList(queryWrapper).stream()
+                .collect(Collectors.toMap(User::getId, User::getUserName));
         if(Objects.isNull(worker)){
             throw new RuntimeException("数据库中无工人");
         }
-        return worker;
+        return new ResponseResult<>(HttpStatus.OK.value(),worker);
     }
 
-    public List<String>getAllSupervisor(){
-        List<String> supervisor;
+    public ResponseResult getAllSupervisor(){
+        Map<Long,String> supervisor;
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(User::getUserName).eq(User::getUserType,"3");
         supervisor = userMapper.selectList(queryWrapper).stream()
-                .map(User::getUserName).collect(Collectors.toList());
+                .collect(Collectors.toMap(User::getId, User::getUserName));
         if(Objects.isNull(supervisor)){
             throw new RuntimeException("数据库中无监督员");
         }
-        return supervisor;
+        return new ResponseResult(HttpStatus.OK.value(),supervisor);
     }
 
     /*
      * 管理员写操作票
      */
     //TODO：fullTicket 去userid，name等信息
-    public ResponseResult writeTicket(FullTicket fullTicket){
+    public ResponseResult saveTicket(FullTicket fullTicket){
         ticketMapper.insertTicket(fullTicket);
 
         List<String> steps = fullTicket.getSteps();
@@ -107,14 +107,14 @@ public class TicketService {
             ticketMapper.insertSteps(i, steps.get(i - 1),fullTicket.getTicketId());
         }
         //TODO: 插入失败处理
-        return new ResponseResult<>(200 , "write ticket success");
+        return new ResponseResult(HttpStatus.OK.value() , "write ticket success");
     }
 
     /*
      * 输入：currentPage
      * 根据id查看操作票，包括ticket表所有字段
      */
-    public ResponseResult getTicketRecord(){
+    public ResponseResult getTicketList(){
         //获取loginUser id
         //TODO: 做登陆的时候改成从contextHolder里面取授权对象
         LoginUser user = new LoginUser(3L,"Josh" , "工人");
@@ -137,7 +137,7 @@ public class TicketService {
      * 根据操作票id查寻详情，单表查询step单表，点进去则可以查看错误
      * @return: List<Map<column_name,value>>
      */
-    public ResponseResult getTicketInfoById(Long ticketId){
+    public ResponseResult getTicketInfo(Long ticketId){
         //前端返回选择了哪张ticket
         LambdaQueryWrapper<OperationStep> queryWrapper = new LambdaQueryWrapper<>();
 
@@ -150,8 +150,32 @@ public class TicketService {
 //        Map<Integer, OperationStep> steps = stepMapper.selectList(queryWrapper)
 //                .stream().collect(Collectors.toMap(OperationStep::getStepOrder, Function.identity()));
         List<OperationStep> steps = stepMapper.selectList(queryWrapper);
+        //return list of step Map
         //根据ticket查step表
         return new ResponseResult(HttpStatus.OK.value(),steps);
     }
 
+    /*
+     * 根据操作票状态查询
+     */
+    public ResponseResult getTicketByStatus(String status) {
+        LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
+
+        queryWrapper.select(
+               OperationTicket::getCreateTime,OperationTicket::getId,OperationTicket::getAdminId,OperationTicket::getAdminName,
+                OperationTicket::getWorkerId,OperationTicket::getWorkerName,OperationTicket::getSupervisorName,
+                OperationTicket::getCompleteStatus,OperationTicket::getTaskName)
+                        .eq(OperationTicket::getCompleteStatus,status);
+
+        List<OperationTicket> result =  ticketMapper.selectList(queryWrapper);
+
+        return new ResponseResult(200,result);
+
+    }
+
+    public ResponseResult delete(Long id) {
+        ticketMapper.deleteById(id);
+
+        return new ResponseResult(HttpStatus.OK.value(),"delete success");
+    }
 }

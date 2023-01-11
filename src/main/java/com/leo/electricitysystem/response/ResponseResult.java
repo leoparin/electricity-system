@@ -1,5 +1,6 @@
 package com.leo.electricitysystem.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leo.electricitysystem.domain.OperationStep;
 import org.springframework.http.HttpStatus;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * @Date 2023/1/7 07:51
  * @Author leo
  **/
-//@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseResult <T>{
 
         /**
@@ -62,6 +63,11 @@ public class ResponseResult <T>{
             this.data = data;
 
         }
+
+    public ResponseResult( String msg) {
+            this.msg = msg;
+    }
+
     public Integer getCode() {
 
             return code;

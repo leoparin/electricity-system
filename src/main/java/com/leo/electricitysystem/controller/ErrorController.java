@@ -23,7 +23,7 @@ public class ErrorController {
     @Autowired
     private ErrorService errorService;
 
-    //get Uniform error by id
+    //get Uniform error by worker id
     @GetMapping("/uniformError/{id}")
     public ResponseResult getUniformError(@PathVariable Long id){
         return errorService.getUniformErrorById(id);
@@ -38,7 +38,9 @@ public class ErrorController {
     //get Cabinet error by worker id
     @GetMapping("/cabinetError/{id}")
     public ResponseResult getCabinetError(@PathVariable Long id){
-        return errorService.getCabinetErrorByWokerId(id);
+        return errorService.getCabinetErrorByWorkerId(id);
     }
+
+
 
 }

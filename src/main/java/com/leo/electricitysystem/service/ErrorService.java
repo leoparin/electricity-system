@@ -55,7 +55,7 @@ public class ErrorService {
 
     @Autowired
     private CabinetErrorMapper cabinetErrorMapper;
-    public ResponseResult getCabinetErrorByWokerId(Long workerId) {
+    public ResponseResult getCabinetErrorByWorkerId(Long workerId) {
         LambdaQueryWrapper<CabinetError> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(CabinetError::getDescription,CabinetError::getErrorStatus,CabinetError::getWorkerName,CabinetError::getWorkerId)
                 .eq(CabinetError::getWorkerId,workerId);

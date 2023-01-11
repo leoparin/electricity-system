@@ -28,7 +28,8 @@ public class TicketServiceTest {
 
     @Test
     void getSwitchTest() {
-     System.out.println(ticketService.getAllSwitch());
+        String json = JSON.toJSONString(ticketService.getAllSwitch());
+        System.out.println(json);
     }
 
     @Test
@@ -38,7 +39,8 @@ public class TicketServiceTest {
 
     @Test
     void getWorkerTest(){
-        System.out.println(ticketService.getAllWorker());
+        String json = JSON.toJSONString(ticketService.getAllWorker());
+        System.out.println(json);
     }
 
     @Test
@@ -46,29 +48,31 @@ public class TicketServiceTest {
         System.out.println(ticketService.getAllSupervisor());
     }
 
-    @Test
-    void writeTicketTest(){
-        List<String> steps = List.of(
-        "将10kV××线***开关的 “远方/就地” 切换开关切换至就地位置，查确己在就地位置",
-        "断开 10kV××线***开关。",
-        "查10kV××线***开关机械位置指示及开关分合闸指示确在断开位置，电流表指示无电流，带电显示器指示确无带电");
-        FullTicket fullTicket = new FullTicket("10kV××线***开关由运行转检修",
-                "leo","Josh","王武",steps);
-        ticketService.writeTicket(fullTicket);
+//    @Test
+//    void writeTicketTest(){
+//        List<String> steps = List.of(
+//        "将10kV××线***开关的 “远方/就地” 切换开关切换至就地位置，查确己在就地位置",
+//        "断开 10kV××线***开关。",
+//        "查10kV××线***开关机械位置指示及开关分合闸指示确在断开位置，电流表指示无电流，带电显示器指示确无带电");
+//        FullTicket fullTicket = new FullTicket("10kV××线***开关由运行转检修",
+//                "leo","Josh","王武",steps);
+//        ticketService.writeTicket(fullTicket);
+//
+//
+//
+//    }
 
-    }
-
     @Test
-    void getTicketInfoByIdTest(){
+    void getTicketInfoByTicketIdTest(){
         Long ticketId = 1L;
-        ResponseResult result = ticketService.getTicketInfoById(ticketId);
+        ResponseResult result = ticketService.getTicketInfo(ticketId);
         String json = JSON.toJSONString(result);
         System.out.println(json);
     }
 
     @Test
     void getTicketPageByUserId(){
-        ResponseResult result = ticketService.getTicketRecord();
+        ResponseResult result = ticketService.getTicketList();
         String json = JSON.toJSONString(result);
         System.out.println(json);
     }

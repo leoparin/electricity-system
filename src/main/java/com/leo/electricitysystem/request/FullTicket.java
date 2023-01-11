@@ -3,6 +3,7 @@ package com.leo.electricitysystem.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,16 +17,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class FullTicket {
-    public FullTicket(String taskName, String adminName,
-                      String workerName, String supervisorName, List<String> steps) {
-        this.taskName = taskName;
-        this.adminName = adminName;
-        this.workerName = workerName;
-        this.supervisorName = supervisorName;
-        Steps = steps;
-    }
 
-    //存入数据库的时候写时间
     Long ticketId;
 
     String taskName;
@@ -34,7 +26,14 @@ public class FullTicket {
 
     String workerName;
 
+    Long workerId;
+
+    Long adminId;
+
     String supervisorName;
+
+    //TODO:记录自动过期
+    String createTime;
 
     List<String> Steps;
 }
