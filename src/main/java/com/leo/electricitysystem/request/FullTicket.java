@@ -35,5 +35,9 @@ public class FullTicket {
     //TODO:记录自动过期
     String createTime;
 
+    String completeTime;
+
     List<String> Steps;
+
+
 }

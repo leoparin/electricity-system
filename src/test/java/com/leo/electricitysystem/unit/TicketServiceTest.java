@@ -1,4 +1,4 @@
-package com.leo.electricitysystem;
+package com.leo.electricitysystem.unit;
 
 import com.alibaba.fastjson.JSON;
 import com.leo.electricitysystem.request.FullTicket;
@@ -65,14 +65,14 @@ public class TicketServiceTest {
     @Test
     void getTicketInfoByTicketIdTest(){
         Long ticketId = 1L;
-        ResponseResult result = ticketService.getTicketInfo(ticketId);
+        ResponseResult result = ticketService.getTicketSteps(ticketId);
         String json = JSON.toJSONString(result);
         System.out.println(json);
     }
 
     @Test
     void getTicketPageByUserId(){
-        ResponseResult result = ticketService.getTicketList();
+        ResponseResult result = ticketService.getTicketListPage(1);
         String json = JSON.toJSONString(result);
         System.out.println(json);
     }

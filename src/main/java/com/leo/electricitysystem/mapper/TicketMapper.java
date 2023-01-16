@@ -5,6 +5,7 @@ import com.leo.electricitysystem.domain.LoginUser;
 import com.leo.electricitysystem.domain.OperationStep;
 import com.leo.electricitysystem.domain.OperationTicket;
 import com.leo.electricitysystem.request.FullTicket;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -30,5 +31,8 @@ public interface TicketMapper extends BaseMapper<OperationTicket> {
 
     void insertSteps(int stepOrder,String description,Long ticketId);
 
+    //todo: 修改分页查询的当前页码
     List<OperationTicket> selectTicketPageByUserID(int offset,LoginUser loginUser);
+
+    int selectTicketAmount(@Param("loginUser") LoginUser loginUser);
 }

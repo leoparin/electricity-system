@@ -1,6 +1,8 @@
 package com.leo.electricitysystem.domain.utils;
 
+import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.response.ResponseResult;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,8 +17,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ProjectExceptionAdvice {
 
-    @ExceptionHandler
+    @ExceptionHandler(value = {
+            IdNotFoundException.class
+    })
     public ResponseResult doException(Exception e){
-        return new ResponseResult<>("服务器故障");
+        e.printStackTrace();
+        return new ResponseResult(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }
 }

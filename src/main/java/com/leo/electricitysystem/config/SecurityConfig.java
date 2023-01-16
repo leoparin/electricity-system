@@ -19,11 +19,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/ticket/write")
+                .antMatchers("/ticket")
                 .anonymous()
                 .and()
-                .antMatcher("/ticket/worker").anonymous()
-                .and()
-                .antMatcher("/ticket/conditionSelect").anonymous();
+                .antMatcher("/error")
+                .anonymous();
     }
 }

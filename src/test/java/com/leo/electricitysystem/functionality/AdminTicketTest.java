@@ -1,10 +1,8 @@
-package com.leo.electricitysystem;
+package com.leo.electricitysystem.functionality;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leo.electricitysystem.mapper.TicketMapper;
 import com.leo.electricitysystem.request.FullTicket;
-import com.leo.electricitysystem.service.TicketService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -51,22 +52,31 @@ public class AdminTicketTest {
                 "查10kV××线***开关机械位置指示及开关分合闸指示确在断开位置，电流表指示无电流，带电显示器指示确无带电");
         FullTicket ticket = new FullTicket(null,"10kV××线***开关由运行转检修",
                 "leo","Josh",1L,3L,"王武",
-                "2023-01-10 21:06:28",steps);
+                "2023-01-10 21:06:28","2023-01-10 21:06:28",steps);
 
         mockMvc.perform(
-                post("/ticket/write")
+                post("/ticket/")
                 .content(new ObjectMapper().writeValueAsString(ticket))
                         .header(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
                                 status().isOk(),
                                 jsonPath("$.msg").value("write ticket success")
-                        );
+                );
     }
 
-    /*
-     * delete a ticket from db
-     */
+    @Test
+    @DisplayName("管理员写入操作票失败")
+    void writeTicketFail() throws Exception {
+        List<String> steps = List.of(
+                "将10kV××线***开关的 “远方/就地” 切换开关切换至就地位置，查确己在就地位置",
+                "断开 10kV××线***开关。",
+                "查10kV××线***开关机械位置指示及开关分合闸指示确在断开位置，电流表指示无电流，带电显示器指示确无带电");
+        FullTicket ticket = new FullTicket(null,"10kV××线***开关由运行转检修",
+                "leo","Josh",1L,3L,"王武",
+                "2023-01-10 21:06:28","2023-01-10 21:06:28",steps);
+    }
+
 
     @Test
     void getWorker() throws Exception {
@@ -83,12 +93,29 @@ public class AdminTicketTest {
     @Test
     @DisplayName("根据操作票状态查询")
     void selectTicketByStatus() throws Exception {
-        mockMvc.perform(get("/ticket/conditionSelect/未完成"))
+        mockMvc.perform(get("/ticket/status/未完成"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.data").isArray()
                 );
     }
+
+    /*
+     * 根据ticketId查询操作票所有信息，包括着装错误操作错误以及操作柜错误
+     *
+     */
+//    @Test
+//    @DisplayName("选择ticket详细信息")
+//    void getTicketDetailById() throws Exception {
+//        mockMvc.perform(get("/ticket/all/1"))
+//                .andDo(print())
+//                .andExpectAll(
+//                        status().isOk(),
+//                        jsonPath("$.data").isMap()
+//                );
+//    }
+
+
 
     @Autowired
     TicketMapper ticketMapper;
@@ -96,16 +123,91 @@ public class AdminTicketTest {
     @Test
     @DisplayName("根据id删除操作票")
     void deleteTicketById() throws Exception {
-        mockMvc.perform(delete("/ticket/10"))
+        mockMvc.perform(delete("/ticket/13"))
                 .andExpectAll(
                         status().isOk(),
+                        jsonPath("$.code").value(200),
                         jsonPath("$.msg").value("delete success")
-                );
-
-
+                );//r对象没把code封装到response code里面，照样是200
            assertNull(ticketMapper.selectById(10),"ticketID=10的记录不为空");
     }
 
+    @Test
+    @DisplayName("根据id删除操作票")
+    void deleteTicketFail() throws Exception {
+        mockMvc.perform(delete("/ticket/12"))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.msg").value("ticket id not found, delete fail")
+                );
+    }
+
+
+    @Test
+    @DisplayName("根据操作票id查询操作票步骤")
+    void getTicketStepsById() throws Exception {
+
+        mockMvc.perform(get("/ticket/steps/15"))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.msg").value("get steps success")
+                );
+    }
+
+    @Test
+    @DisplayName("根据操作票id查询操作票步骤失败")
+    void getTicketStepsFail() throws Exception {
+
+        mockMvc.perform(get("/ticket/steps/12"))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.msg").value("get steps fail,ticket does not exist")
+                );
+    }
+
+
+    @Test
+    @DisplayName("分页查询ticket")
+    void getTicketPage() throws Exception {
+        mockMvc.perform(get("/ticket/page/0"))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.msg").value("get page success")
+                );
+    }
+
+
+    @Test
+    @DisplayName("分页查询ticket失败")
+    void getTicketPageFail() throws Exception {
+        mockMvc.perform(get("/ticket/page/1"))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.msg").value("get page fail,do not have enough ticket")
+                );
+    }
+
+    @Test
+    @DisplayName("查询总共有多少ticket")
+    void getTicketAmount() throws Exception {
+        mockMvc.perform(get("/ticket/amount"))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.msg").value("get amount success"),
+                        jsonPath("$.data").isNumber()
+                );
+    }
+
+    @Test
+    @DisplayName("查询总共有多少ticket失败")
+    void getTicketAmountFail() throws Exception {
+        mockMvc.perform(get("/ticket/amount"))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.msg").value("no ticket in current account")
+                );
+
+    }
 
 
 }

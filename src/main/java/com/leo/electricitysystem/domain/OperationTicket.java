@@ -27,6 +27,7 @@ public class OperationTicket {
      */
     private String createTime;
 
+    private String completeTime;
     /*
      * 管理员id
      */

@@ -49,25 +49,48 @@ public class TicketController {
         return  ticketService.getAllSupervisor();
     }
 
-    @PostMapping("/write")
+    @PostMapping
     public ResponseResult saveTicket(@RequestBody FullTicket fullTicket){
         return ticketService.saveTicket(fullTicket);
     }
 
-    @GetMapping("/getAdminAllTicket/{adminName}")
-    public ResponseResult getAdminTicket(@PathVariable String adminName){
+    /*
+     * pageSize: 5
+     */
+    @GetMapping("/page/{currentPage}")
+    public ResponseResult getTicketByUserId(@PathVariable int currentPage){
         //使用mp根据id查
-        return ticketService.getTicketList();
+        return ticketService.getTicketListPage(currentPage);
     }
 
-    @GetMapping("/conditionSelect/{status}")
+    @GetMapping("/status/{status}")
     public ResponseResult getTicketByStatus(@PathVariable  String status){
-        return ticketService.getTicketByStatus(status);
+        return ticketService.getTicketByStatus(status);//todo:分页
     }
+
+    @GetMapping("/steps/{id}")
+    public ResponseResult getStepsById(@PathVariable Long id){
+        //使用mp根据id查
+        return ticketService.getTicketSteps(id);
+    }
+
+    /*
+     * 根据当前用户查看共有多少ticket
+     */
+    @GetMapping("/amount")
+    public ResponseResult getTicketAmount(){
+        return ticketService.getTicketAmount();
+    }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseResult delete(@PathVariable Long id){
         return ticketService.delete(id);
     }
 
+//    @GetMapping("/all/{id}")
+//    public ResponseResult getAllInfo(@PathVariable Long id){
+//        return ticketService.getTicketAllInfo(id);
+//    }
 }

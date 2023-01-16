@@ -2,9 +2,11 @@ package com.leo.electricitysystem.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.*;
+import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.mapper.*;
 import com.leo.electricitysystem.request.FullTicket;
 import com.leo.electricitysystem.response.ResponseResult;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -80,7 +82,7 @@ public class TicketService {
         if(Objects.isNull(worker)){
             throw new RuntimeException("数据库中无工人");
         }
-        return new ResponseResult<>(HttpStatus.OK.value(),worker);
+        return new ResponseResult(HttpStatus.OK.value(),worker);
     }
 
     public ResponseResult getAllSupervisor(){
@@ -98,7 +100,6 @@ public class TicketService {
     /*
      * 管理员写操作票
      */
-    //TODO：fullTicket 去userid，name等信息
     public ResponseResult saveTicket(FullTicket fullTicket){
         ticketMapper.insertTicket(fullTicket);
 
@@ -113,9 +114,11 @@ public class TicketService {
     /*
      * 输入：currentPage
      * 根据id查看操作票，包括ticket表所有字段
+     *
      */
-    public ResponseResult getTicketList(){
+    public ResponseResult getTicketListPage(int currentPage){
         //获取loginUser id
+        //todo:page size metadata
         //TODO: 做登陆的时候改成从contextHolder里面取授权对象
         LoginUser user = new LoginUser(3L,"Josh" , "工人");
         //从数据库查询
@@ -125,9 +128,13 @@ public class TicketService {
 //                OperationTicket::getWorkerId);
 //        List<OperationTicket> result = ticketMapper.selectList(queryWrapper);
         //todo 取current page做参数
-        List<OperationTicket> result= ticketMapper.selectTicketPageByUserID(0,user);
 
-        return new ResponseResult<>(HttpStatus.OK.value(),result);
+        int offset = currentPage * 5;
+        List<OperationTicket> result= ticketMapper.selectTicketPageByUserID(offset,user);
+        if(result.size()==0){
+            throw new IdNotFoundException("get page fail,do not have enough ticket");
+        }//TODO: 修改throws
+        return new ResponseResult(HttpStatus.OK.value(),"get page fail,do not have enough ticket",result);
     }
 
     @Autowired
@@ -135,9 +142,9 @@ public class TicketService {
 
     /*
      * 根据操作票id查寻详情，单表查询step单表，点进去则可以查看错误
-     * @return: List<Map<column_name,value>>
+     * @return: List<OperationSteps> ordered
      */
-    public ResponseResult getTicketInfo(Long ticketId){
+    public ResponseResult getTicketSteps(Long ticketId){
         //前端返回选择了哪张ticket
         LambdaQueryWrapper<OperationStep> queryWrapper = new LambdaQueryWrapper<>();
 
@@ -152,7 +159,10 @@ public class TicketService {
         List<OperationStep> steps = stepMapper.selectList(queryWrapper);
         //return list of step Map
         //根据ticket查step表
-        return new ResponseResult(HttpStatus.OK.value(),steps);
+        if(steps.size()==0){
+            throw new IdNotFoundException("get steps fail,ticket does not exist");
+        }
+        return new ResponseResult(HttpStatus.OK.value(),"get steps success",steps);
     }
 
     /*
@@ -162,10 +172,11 @@ public class TicketService {
         LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
 
         queryWrapper.select(
-               OperationTicket::getCreateTime,OperationTicket::getId,OperationTicket::getAdminId,OperationTicket::getAdminName,
-                OperationTicket::getWorkerId,OperationTicket::getWorkerName,OperationTicket::getSupervisorName,
-                OperationTicket::getCompleteStatus,OperationTicket::getTaskName)
-                        .eq(OperationTicket::getCompleteStatus,status);
+                        OperationTicket::getCreateTime, OperationTicket::getId,
+                        OperationTicket::getAdminId, OperationTicket::getAdminName,
+                        OperationTicket::getWorkerId, OperationTicket::getWorkerName, OperationTicket::getSupervisorName,
+                        OperationTicket::getCompleteStatus, OperationTicket::getTaskName)
+                .eq(OperationTicket::getCompleteStatus, status);
 
         List<OperationTicket> result =  ticketMapper.selectList(queryWrapper);
 
@@ -174,8 +185,20 @@ public class TicketService {
     }
 
     public ResponseResult delete(Long id) {
-        ticketMapper.deleteById(id);
-
+        int flag =  ticketMapper.deleteById(id);
+        if(flag==0){
+            throw new IdNotFoundException("ticket id not found, delete fail");
+        }
         return new ResponseResult(HttpStatus.OK.value(),"delete success");
+    }
+
+    public ResponseResult getTicketAmount() {
+            //TODO:context holder
+        LoginUser user = new LoginUser(10L,"Josh" , "工人");
+        int result = ticketMapper.selectTicketAmount(user);
+        if(result==0){
+            throw new IdNotFoundException("no ticket in current account");
+        }
+        return new ResponseResult(HttpStatus.OK.value(),"get amount success",result);
     }
 }

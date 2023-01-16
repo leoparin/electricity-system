@@ -5,6 +5,7 @@ import com.leo.electricitysystem.domain.OperationStep;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ClassName:ResponseResult
@@ -15,7 +16,7 @@ import java.util.List;
  * @Author leo
  **/
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ResponseResult <T>{
+public class ResponseResult {
 
         /**
          * 状态码
@@ -33,7 +34,7 @@ public class ResponseResult <T>{
          * 查询到的结果数据，
          */
 
-        private T data;
+        private Object data;
 
 
         public ResponseResult(Integer code, String msg) {
@@ -45,7 +46,7 @@ public class ResponseResult <T>{
         }
 
 
-        public ResponseResult(Integer code, T data) {
+        public ResponseResult(Integer code, Object data) {
 
             this.code = code;
 
@@ -54,7 +55,7 @@ public class ResponseResult <T>{
         }
 
 
-        public ResponseResult(Integer code, String msg, T data) {
+        public ResponseResult(Integer code, String msg, Object data) {
 
             this.code = code;
 
@@ -92,13 +93,13 @@ public class ResponseResult <T>{
 
         }
 
-        public T getData() {
+        public Object getData() {
 
             return data;
 
         }
 
-        public void setData(T data) {
+        public void setData(Object data) {
 
             this.data = data;
 

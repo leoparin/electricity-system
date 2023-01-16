@@ -9,8 +9,8 @@
             select last_insert_id()
         </selectKey>
        -- 插入操作票
-        INSERT into operation_ticket(create_time,task_name,admin_name,admin_id,worker_name,worker_id,supervisor_name)
-        VALUES (#{createTime},#{taskName},#{adminName},#{adminId},#{workerName},#{workerId},#{supervisorName});
+        INSERT into operation_ticket(create_time,complete_time,task_name,admin_name,admin_id,worker_name,worker_id,supervisor_name)
+        VALUES (#{createTime},#{completeTime},#{taskName},#{adminName},#{adminId},#{workerName},#{workerId},#{supervisorName});
     </insert>
 
     <insert id="insertSteps">
@@ -18,20 +18,6 @@
         INSERT into operation_steps(description,step_order,ticket_id)
         VALUES (#{description},#{stepOrder},#{ticketId})
     </insert>
-
-<!---->
-<!--    <select id="findAllStepsByAdminId" resultType="com.leo.electricitysystem.domain.OperationStep">-->
-<!--        &#45;&#45; 查看 id=1 的管理员下发的操作票所有步骤-->
-<!--        SELECT-->
-<!--            os.step_order,-->
-<!--            os.description-->
-<!--        FROM sys_user u-->
-<!--                 LEFT JOIN operation_ticket ot on ot.admin_id = u.id-->
-<!--                 LEFT JOIN operation_steps os on ot.id = os.ticket_id-->
-<!--        WHERE-->
-<!--            u.id= #{userId}-->
-<!--        ORDER BY os.step_order;-->
-<!--    </select>-->
 
 
     <select id="selectTicketPageByUserID" resultType="com.leo.electricitysystem.domain.OperationTicket">
@@ -46,6 +32,19 @@
         </otherwise>
         </choose>
         LIMIT #{offset},3;
+    </select>
+
+    <select id="selectTicketAmount" resultType="java.lang.Integer">
+        -- 根据user类型查看当前账户的ticket数目
+        SELECT count(*) from operation_ticket
+        <choose>
+            <when test="loginUser.userType == '工人'">
+                where #{loginUser.id} = worker_id;
+            </when>
+            <otherwise>
+                where #{loginUser.id} = admin_id;
+            </otherwise>
+        </choose>
     </select>
 
 

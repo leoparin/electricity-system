@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.CabinetError;
 import com.leo.electricitysystem.domain.OperationError;
 import com.leo.electricitysystem.domain.UniformError;
+import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.mapper.CabinetErrorMapper;
 import com.leo.electricitysystem.mapper.OperationErrorMapper;
 import com.leo.electricitysystem.mapper.UniformErrorMapper;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -32,12 +34,16 @@ public class ErrorService {
      */
     @Autowired
     private UniformErrorMapper uniformErrorMapper;
-    public ResponseResult getUniformErrorById(Long workerId) {
+    public ResponseResult getUniformErrorByTicketId(Long ticketId) {
         LambdaQueryWrapper<UniformError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(UniformError::getDescription,UniformError::getId,UniformError::getWorkerId)
-                .eq(UniformError::getWorkerId,workerId);
+        queryWrapper.select(UniformError::getWorkerId,UniformError::getTicketId,UniformError::getId,
+                        UniformError::isUniform,UniformError::isHelmet,UniformError::isGloves)
+                .eq(UniformError::getTicketId,ticketId);
         UniformError result = uniformErrorMapper.selectOne(queryWrapper);
-        return new ResponseResult(HttpStatus.OK.value(), result);
+        if(Objects.isNull(result)){
+            throw new IdNotFoundException("无服装错误");
+        }
+        return new ResponseResult(HttpStatus.OK.value(),"get uniform error success",result);
     }
 
 
@@ -47,19 +53,47 @@ public class ErrorService {
         LambdaQueryWrapper<OperationError> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(OperationError::getDescription)
                 .eq(OperationError::getStepId,stepId);
-        List<String> result = operationErrorMapper.selectList(queryWrapper).stream().
-                map(OperationError::getDescription).collect(Collectors.toList());
-        return new ResponseResult(HttpStatus.OK.value(), result);
+        List<OperationError> result = operationErrorMapper.selectList(queryWrapper);
+
+        return new ResponseResult(HttpStatus.OK.value(),"get operation error success", result);
     }
 
 
     @Autowired
     private CabinetErrorMapper cabinetErrorMapper;
-    public ResponseResult getCabinetErrorByWorkerId(Long workerId) {
+    public ResponseResult getCabinetErrorByTicketId(Long ticketId) {
         LambdaQueryWrapper<CabinetError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(CabinetError::getDescription,CabinetError::getErrorStatus,CabinetError::getWorkerName,CabinetError::getWorkerId)
-                .eq(CabinetError::getWorkerId,workerId);
+        queryWrapper.select(CabinetError::getDescription,CabinetError::getErrorStatus,
+                        CabinetError::getTicketId,CabinetError::getCreateTime)
+                .eq(CabinetError::getTicketId,ticketId);
         CabinetError result = cabinetErrorMapper.selectOne(queryWrapper);
-        return new ResponseResult(HttpStatus.OK.value(), result);
+        if(Objects.isNull(result)){
+            throw new IdNotFoundException("无操作柜选择错误");
+        }
+        return new ResponseResult(HttpStatus.OK.value(), "get cabinet error success",result);
+    }
+
+    public ResponseResult saveUniformError(UniformError uniformError) {
+        int flag = uniformErrorMapper.insert(uniformError);
+        if(flag==0){
+            throw new IdNotFoundException("write uniform error fail");
+        }
+        return new ResponseResult(HttpStatus.OK.value(),"write uniform error success");
+    }
+
+    public ResponseResult saveCabinetError(CabinetError cabinetError) {
+        int flag = cabinetErrorMapper.insert(cabinetError);
+        if(flag==0){
+            throw new IdNotFoundException("write cabinet error fail");
+        }
+        return new ResponseResult(HttpStatus.OK.value(),"write cabinet error success");
+    }
+
+    public ResponseResult saveOperationError(OperationError operationError) {
+        int flag = operationErrorMapper.insert(operationError);
+        if(flag==0){
+            throw new IdNotFoundException("write operation error fail");
+        }
+        return new ResponseResult(HttpStatus.OK.value(),"write operation error success");
     }
 }

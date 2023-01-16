@@ -2,6 +2,7 @@ package com.leo.electricitysystem.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -14,6 +15,7 @@ import lombok.Data;
  **/
 @Data
 @TableName("operation_error")
+@AllArgsConstructor
 public class OperationError {
 
     @TableId
@@ -28,4 +30,8 @@ public class OperationError {
      * 错误工人ID
      */
     private Long stepId;
+
+
+
+
 }

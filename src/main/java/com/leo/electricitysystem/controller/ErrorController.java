@@ -1,12 +1,12 @@
 package com.leo.electricitysystem.controller;
 
+import com.leo.electricitysystem.domain.CabinetError;
+import com.leo.electricitysystem.domain.OperationError;
+import com.leo.electricitysystem.domain.UniformError;
 import com.leo.electricitysystem.response.ResponseResult;
 import com.leo.electricitysystem.service.ErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * ClassName:ErrorController
@@ -23,24 +23,38 @@ public class ErrorController {
     @Autowired
     private ErrorService errorService;
 
-    //get Uniform error by worker id
-    @GetMapping("/uniformError/{id}")
+    //get Uniform error by ticket id
+    @GetMapping("/uniform/{id}")
     public ResponseResult getUniformError(@PathVariable Long id){
-        return errorService.getUniformErrorById(id);
+        return errorService.getUniformErrorByTicketId(id);
     }
 
     //get Operation error by step id
-    @GetMapping("/operationError/{id}")
+    @GetMapping("/operation/{id}")
     public ResponseResult getOperationError(@PathVariable Long id){
         return errorService.getOperationErrorByStepId(id);
     }
 
-    //get Cabinet error by worker id
-    @GetMapping("/cabinetError/{id}")
+    //get Cabinet error by ticket id
+    @GetMapping("/cabinet/{id}")
     public ResponseResult getCabinetError(@PathVariable Long id){
-        return errorService.getCabinetErrorByWorkerId(id);
+        return errorService.getCabinetErrorByTicketId(id);
     }
 
+    @PostMapping("/uniform")
+    public ResponseResult saveUniformError(@RequestBody UniformError uniformError){
+        return errorService.saveUniformError(uniformError);
+    }
+
+    //关联操作票id在requestBody中
+    @PostMapping("/cabinet")
+    public ResponseResult saveCabinetError(@RequestBody CabinetError cabinetError){
+        return errorService.saveCabinetError(cabinetError);
+    }
+    @PostMapping("/operation")
+    public ResponseResult saveOperationError(@RequestBody OperationError operationError){
+        return errorService.saveOperationError(operationError);
+    }
 
 
 }

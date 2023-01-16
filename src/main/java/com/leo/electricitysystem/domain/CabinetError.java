@@ -2,6 +2,7 @@ package com.leo.electricitysystem.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -13,6 +14,7 @@ import lombok.Data;
  * @Author leo
  **/
 @Data
+@AllArgsConstructor
 @TableName("cabinet_error")
 public class CabinetError {
 //TODO: cabinetError 注释
@@ -23,7 +25,11 @@ public class CabinetError {
 
     private String errorStatus;
 
-    private Long workerId;
+//    private Long workerId;
+//
+//    private String workerName;
 
-    private String workerName;
+    private Long ticketId;
+
+    private String createTime;
 }

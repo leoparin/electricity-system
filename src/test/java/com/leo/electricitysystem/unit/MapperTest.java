@@ -1,4 +1,4 @@
-package com.leo.electricitysystem;
+package com.leo.electricitysystem.unit;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.*;
@@ -153,8 +153,8 @@ public class MapperTest {
     void selectUniformErrorById(){
         UniformError error;
         LambdaQueryWrapper<UniformError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(UniformError::getId,UniformError::getDescription)
-                .eq(UniformError::getWorkerId,"3");
+        queryWrapper.select(UniformError::getId,UniformError::getWorkerId)
+                .eq(UniformError::getTicketId,"3");
         error = uniformErrorMapper.selectOne(queryWrapper);
         if(Objects.isNull(error)){
             throw new RuntimeException("无着装错误");
