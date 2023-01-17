@@ -82,7 +82,7 @@ public class TicketService {
         if(Objects.isNull(worker)){
             throw new RuntimeException("数据库中无工人");
         }
-        return new ResponseResult(HttpStatus.OK.value(),worker);
+        return new ResponseResult(HttpStatus.OK.value(),"get worker success",worker);
     }
 
     public ResponseResult getAllSupervisor(){
@@ -100,13 +100,26 @@ public class TicketService {
     /*
      * 管理员写操作票
      */
+   // @Autowired
+   // private StepSwitchMapper stepSwitchMapper;
     public ResponseResult saveTicket(FullTicket fullTicket){
         ticketMapper.insertTicket(fullTicket);
-
+        //select key 会把主键放在model的主键中
         List<String> steps = fullTicket.getSteps();
+        List<StepSwitch> switches= fullTicket.getStepSwitch();
         for(int i = 1;i<=steps.size();i++){
-            ticketMapper.insertSteps(i, steps.get(i - 1),fullTicket.getTicketId());
-        }
+            OperationStep step = new OperationStep(i, steps.get(i - 1),fullTicket.getTicketId());
+            ticketMapper.insertSteps(step);
+            //如果stepOrder = 当前stepOrder则继续循环
+            for( int j = i; j<=switches.size();j++) {
+                StepSwitch stepSwitch = switches.get(j-1);
+                if (switches.get(j-1).getStepOrder() == i)
+                    ticketMapper.insertSwitch(new StepSwitch(null, step.getId(), stepSwitch.getSwitchId(),
+                            stepSwitch.getStepOrder(), stepSwitch.getSwitchStatus()));
+                else break;
+            }
+        }//todo:steps complete status
+
         //TODO: 插入失败处理
         return new ResponseResult(HttpStatus.OK.value() , "write ticket success");
     }
@@ -127,14 +140,13 @@ public class TicketService {
 //        queryWrapper.select(OperationTicket::getCreateTime,OperationTicket::getId,OperationTicket::getAdminId,
 //                OperationTicket::getWorkerId);
 //        List<OperationTicket> result = ticketMapper.selectList(queryWrapper);
-        //todo 取current page做参数
 
         int offset = currentPage * 5;
         List<OperationTicket> result= ticketMapper.selectTicketPageByUserID(offset,user);
         if(result.size()==0){
             throw new IdNotFoundException("get page fail,do not have enough ticket");
         }//TODO: 修改throws
-        return new ResponseResult(HttpStatus.OK.value(),"get page fail,do not have enough ticket",result);
+        return new ResponseResult(HttpStatus.OK.value(),"get page success",result);
     }
 
     @Autowired
@@ -194,7 +206,7 @@ public class TicketService {
 
     public ResponseResult getTicketAmount() {
             //TODO:context holder
-        LoginUser user = new LoginUser(10L,"Josh" , "工人");
+        LoginUser user = new LoginUser(1L,"leo" , "管理员");
         int result = ticketMapper.selectTicketAmount(user);
         if(result==0){
             throw new IdNotFoundException("no ticket in current account");

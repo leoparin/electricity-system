@@ -25,15 +25,16 @@ public class UniformError {
      */
 //    private String description;
 
-    //TODO: 用来向工人告警
-    private Long  workerId;
-
     private Long ticketId;
 
-    private boolean helmet;
+    private String result;
 
-    private boolean gloves;
 
-    private boolean uniform;
+    private String helmet;
 
+    private String  gloves;
+
+    private String  uniform;
+
+    private String img;
 }

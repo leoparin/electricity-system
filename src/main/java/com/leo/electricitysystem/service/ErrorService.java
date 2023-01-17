@@ -36,9 +36,7 @@ public class ErrorService {
     private UniformErrorMapper uniformErrorMapper;
     public ResponseResult getUniformErrorByTicketId(Long ticketId) {
         LambdaQueryWrapper<UniformError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(UniformError::getWorkerId,UniformError::getTicketId,UniformError::getId,
-                        UniformError::isUniform,UniformError::isHelmet,UniformError::isGloves)
-                .eq(UniformError::getTicketId,ticketId);
+        queryWrapper.eq(UniformError::getTicketId,ticketId);
         UniformError result = uniformErrorMapper.selectOne(queryWrapper);
         if(Objects.isNull(result)){
             throw new IdNotFoundException("无服装错误");
@@ -51,10 +49,8 @@ public class ErrorService {
     private OperationErrorMapper operationErrorMapper;
     public ResponseResult getOperationErrorByStepId(Long stepId) {
         LambdaQueryWrapper<OperationError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(OperationError::getDescription)
-                .eq(OperationError::getStepId,stepId);
-        List<OperationError> result = operationErrorMapper.selectList(queryWrapper);
-
+        queryWrapper.eq(OperationError::getStepId,stepId);
+        OperationError result = operationErrorMapper.selectOne(queryWrapper);
         return new ResponseResult(HttpStatus.OK.value(),"get operation error success", result);
     }
 
@@ -63,9 +59,7 @@ public class ErrorService {
     private CabinetErrorMapper cabinetErrorMapper;
     public ResponseResult getCabinetErrorByTicketId(Long ticketId) {
         LambdaQueryWrapper<CabinetError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(CabinetError::getDescription,CabinetError::getErrorStatus,
-                        CabinetError::getTicketId,CabinetError::getCreateTime)
-                .eq(CabinetError::getTicketId,ticketId);
+                queryWrapper.eq(CabinetError::getTicketId,ticketId);
         CabinetError result = cabinetErrorMapper.selectOne(queryWrapper);
         if(Objects.isNull(result)){
             throw new IdNotFoundException("无操作柜选择错误");

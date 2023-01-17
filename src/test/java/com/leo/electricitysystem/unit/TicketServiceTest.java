@@ -1,10 +1,12 @@
 package com.leo.electricitysystem.unit;
 
 import com.alibaba.fastjson.JSON;
+import com.leo.electricitysystem.domain.StepSwitch;
 import com.leo.electricitysystem.request.FullTicket;
 import com.leo.electricitysystem.response.ResponseResult;
 import com.leo.electricitysystem.service.TicketService;
 import org.apache.coyote.Response;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -77,5 +79,22 @@ public class TicketServiceTest {
         System.out.println(json);
     }
 
+
+    @Test
+    @DisplayName("save ticket unit test")
+    void saveTicket(){
+        List<String> steps = List.of(
+                "将10kV××线***开关的 “远方/就地” 切换开关切换至就地位置，查确己在就地位置",
+                "断开 10kV××线***开关。");
+        List<StepSwitch> switches = List.of(
+                new StepSwitch(null,null,1L,1,"就地"),
+                new StepSwitch(null,null,2L,1,"无带电"),
+                new StepSwitch(null,null,3L,2,"balabala")
+        );
+        FullTicket ticket = new FullTicket(null,"10kV××线***开关由运行转检修",
+                "leo","Josh",1L,3L,"王武",
+                "2023-01-10 21:06:28","2023-01-10 21:06:28",steps,switches);
+        ticketService.saveTicket(ticket);
+    }
 
 }

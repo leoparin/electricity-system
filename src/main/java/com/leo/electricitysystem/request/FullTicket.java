@@ -1,5 +1,7 @@
 package com.leo.electricitysystem.request;
 
+import com.leo.electricitysystem.domain.OperationStep;
+import com.leo.electricitysystem.domain.StepSwitch;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -38,6 +40,9 @@ public class FullTicket {
     String completeTime;
 
     List<String> Steps;
+
+    //写一个switchstep表对象，List map
+    List<StepSwitch> stepSwitch;
 
 
 }

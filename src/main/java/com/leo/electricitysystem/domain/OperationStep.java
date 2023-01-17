@@ -25,7 +25,7 @@ public class OperationStep {
     private String description;
 
     /*
-     * 所属操作票id
+     * 所属操作票idp
      */
     private Long ticketId;
 
@@ -38,4 +38,10 @@ public class OperationStep {
      * 操作状态：未完成，错误，已完成
      */
     private String completeStatus;
+
+    public OperationStep(int stepOrder, String description, Long ticketId) {
+        this.stepOrder = stepOrder;
+        this.description = description;
+        this.ticketId = ticketId;
+    }
 }

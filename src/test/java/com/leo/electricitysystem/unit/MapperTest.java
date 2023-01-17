@@ -153,8 +153,7 @@ public class MapperTest {
     void selectUniformErrorById(){
         UniformError error;
         LambdaQueryWrapper<UniformError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(UniformError::getId,UniformError::getWorkerId)
-                .eq(UniformError::getTicketId,"3");
+        queryWrapper.eq(UniformError::getTicketId,"3");
         error = uniformErrorMapper.selectOne(queryWrapper);
         if(Objects.isNull(error)){
             throw new RuntimeException("无着装错误");
@@ -182,8 +181,7 @@ public class MapperTest {
     void selectOperationErrorById(){
         OperationError error;
         LambdaQueryWrapper<OperationError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(OperationError::getId,OperationError::getDescription)
-                .eq(OperationError::getStepId,"3");
+        queryWrapper.eq(OperationError::getStepId,"3");
         error = operationErrorMapper.selectOne(queryWrapper);
         if(Objects.isNull(error)){
             throw new RuntimeException("无操作错误");

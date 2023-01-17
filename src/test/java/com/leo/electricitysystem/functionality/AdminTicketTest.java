@@ -1,6 +1,7 @@
 package com.leo.electricitysystem.functionality;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leo.electricitysystem.domain.StepSwitch;
 import com.leo.electricitysystem.mapper.TicketMapper;
 import com.leo.electricitysystem.request.FullTicket;
 import org.junit.jupiter.api.DisplayName;
@@ -50,9 +51,14 @@ public class AdminTicketTest {
                 "将10kV××线***开关的 “远方/就地” 切换开关切换至就地位置，查确己在就地位置",
                 "断开 10kV××线***开关。",
                 "查10kV××线***开关机械位置指示及开关分合闸指示确在断开位置，电流表指示无电流，带电显示器指示确无带电");
+        List<StepSwitch> switches = List.of(
+                new StepSwitch(null,null,1L,1,"就地"),
+                new StepSwitch(null,null,2L,1,"无带电"),
+                new StepSwitch(null,null,3L,2,"balabala")
+                );
         FullTicket ticket = new FullTicket(null,"10kV××线***开关由运行转检修",
                 "leo","Josh",1L,3L,"王武",
-                "2023-01-10 21:06:28","2023-01-10 21:06:28",steps);
+                "2023-01-10 21:06:28","2023-01-10 21:06:28",steps,switches);
 
         mockMvc.perform(
                 post("/ticket/")
@@ -72,9 +78,14 @@ public class AdminTicketTest {
                 "将10kV××线***开关的 “远方/就地” 切换开关切换至就地位置，查确己在就地位置",
                 "断开 10kV××线***开关。",
                 "查10kV××线***开关机械位置指示及开关分合闸指示确在断开位置，电流表指示无电流，带电显示器指示确无带电");
+        List<StepSwitch> switches = List.of(
+                new StepSwitch(null,null,1L,1,"就地"),
+                new StepSwitch(null,null,2L,1,"无带电"),
+                new StepSwitch(null,null,3L,2,"balabala")
+                );
         FullTicket ticket = new FullTicket(null,"10kV××线***开关由运行转检修",
                 "leo","Josh",1L,3L,"王武",
-                "2023-01-10 21:06:28","2023-01-10 21:06:28",steps);
+                "2023-01-10 21:06:28","2023-01-10 21:06:28",steps,switches);
     }
 
 
@@ -83,7 +94,7 @@ public class AdminTicketTest {
         mockMvc.perform(get("/ticket/worker"))
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$.msg").value("hello")
+                        jsonPath("$.msg").value("get worker success")
                 );
     }
 
@@ -123,7 +134,7 @@ public class AdminTicketTest {
     @Test
     @DisplayName("根据id删除操作票")
     void deleteTicketById() throws Exception {
-        mockMvc.perform(delete("/ticket/13"))
+        mockMvc.perform(delete("/ticket/14"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.code").value(200),
@@ -131,7 +142,7 @@ public class AdminTicketTest {
                 );//r对象没把code封装到response code里面，照样是200
            assertNull(ticketMapper.selectById(10),"ticketID=10的记录不为空");
     }
-
+//todo：删除操作票同时删除stepSwitch
     @Test
     @DisplayName("根据id删除操作票")
     void deleteTicketFail() throws Exception {
@@ -147,7 +158,7 @@ public class AdminTicketTest {
     @DisplayName("根据操作票id查询操作票步骤")
     void getTicketStepsById() throws Exception {
 
-        mockMvc.perform(get("/ticket/steps/15"))
+        mockMvc.perform(get("/ticket/steps/1"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.msg").value("get steps success")

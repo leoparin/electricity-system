@@ -1,34 +1,33 @@
 package com.leo.electricitysystem.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * ClassName:OperationError
+ * ClassName:StepSwitch
  * PackageName:com.leo.electricitysystem.domain
  * Description:
  *
- * @Date 2023/1/4 16:04
+ * @Date 2023/1/17 08:27
  * @Author leo
  **/
 @Data
-@TableName("operation_error")
 @AllArgsConstructor
-public class OperationError {
-
-    @TableId
+@TableName("step_switch")
+public class StepSwitch {
+    @TableId(type = IdType.AUTO)
     private Long id;
-
-    private String result;
 
     private Long stepId;
 
-    private String needProcedure;
+    private Long switchId;
 
-    private String actualProcedure;
+    private int stepOrder;
 
-    private String img;
+    private String switchStatus;
+
 
 }

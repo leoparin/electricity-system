@@ -43,14 +43,14 @@ class ErrorTest {
         mockMvc.perform(get("/error/uniform/1"))
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$.msg").value("get uniform error success")
+                        jsonPath("$.msg").value("无服装错误")
                 );
     }
 
     @Test
     @DisplayName("根据ticketId查询操作柜错误")
     void getCabinetErrorByTicketId() throws Exception {
-        mockMvc.perform(get("/error/cabinet/1"))
+        mockMvc.perform(get("/error/cabinet/2"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.msg").value("get cabinet error success")
@@ -60,7 +60,7 @@ class ErrorTest {
     @Test
     @DisplayName("根据stepId查询操作错误")
     void getOperationErrorByTicketId() throws Exception {
-        mockMvc.perform(get("/error/operation/1"))
+        mockMvc.perform(get("/error/operation/2"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.msg").value("get operation error success")
@@ -70,8 +70,8 @@ class ErrorTest {
     @Test
     @DisplayName("写入穿着错误")
     void saveUniformError() throws Exception {
-        UniformError error = new UniformError(null,3L,	1L,
-                false,true,true);
+        UniformError error = new UniformError(null,3L,	"False",
+                "True","True","True","abcdg");
 
         mockMvc.perform(
                 post("/error/uniform")
@@ -86,9 +86,11 @@ class ErrorTest {
 
     @Test
     @DisplayName("写入操作柜错误")
+    //写入操作柜错误，
     void saveCabinetError() throws Exception {
-        CabinetError error = new CabinetError(null,"实际使用操作柜601开关柜，正确操作柜611开关柜",
-                "未处理", 1L,"2023-01-12 16:30:43");
+        CabinetError error = new CabinetError(null,"True",1L,
+                "10kV站用变6018柜","10kV安居2线611开关柜",
+                    "abcdefg");
 
         mockMvc.perform(
                         post("/error/cabinet")
@@ -101,11 +103,12 @@ class ErrorTest {
                 );
     }
 
-    //写入某张操作票的某个步骤，需要提供stepOrder，和tikcetID
+    //写入某张操作票的某个步骤，需要提供stepOrder，和ticketID
     @Test
     @DisplayName("写入操作错误")
     void saveOperationError() throws Exception {
-        OperationError error = new OperationError(null,"远方就地切换开关错误，实际状态远方，正确状态就地",18L);
+        OperationError error = new OperationError(null,"True",1L,
+                "远方接地开关切换至远方","远方接地开关切换至远方","abcdg");
 
         mockMvc.perform(
                         post("/error/operation")

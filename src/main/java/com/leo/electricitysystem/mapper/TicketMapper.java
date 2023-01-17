@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leo.electricitysystem.domain.LoginUser;
 import com.leo.electricitysystem.domain.OperationStep;
 import com.leo.electricitysystem.domain.OperationTicket;
+import com.leo.electricitysystem.domain.StepSwitch;
 import com.leo.electricitysystem.request.FullTicket;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -29,7 +30,9 @@ public interface TicketMapper extends BaseMapper<OperationTicket> {
 
     void insertTicket(FullTicket fullTicket);
 
-    void insertSteps(int stepOrder,String description,Long ticketId);
+    void insertSteps(OperationStep step);
+
+    void insertSwitch(StepSwitch stepSwitch);
 
     //todo: 修改分页查询的当前页码
     List<OperationTicket> selectTicketPageByUserID(int offset,LoginUser loginUser);

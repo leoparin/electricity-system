@@ -1,5 +1,6 @@
 package com.leo.electricitysystem.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -17,19 +18,17 @@ import lombok.Data;
 @AllArgsConstructor
 @TableName("cabinet_error")
 public class CabinetError {
-//TODO: cabinetError 注释
     @TableId
     private Long id;
 
-    private String description;
-
-    private String errorStatus;
-
-//    private Long workerId;
-//
-//    private String workerName;
+    private String result;
 
     private Long ticketId;
 
-    private String createTime;
+    private String needCabinet;
+
+    private String actualCabinet;
+
+    private String img;
 }
+//todo:数据库写入失败处理
