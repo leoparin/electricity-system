@@ -5,13 +5,11 @@ import com.leo.electricitysystem.domain.StepSwitch;
 import com.leo.electricitysystem.request.FullTicket;
 import com.leo.electricitysystem.response.ResponseResult;
 import com.leo.electricitysystem.service.TicketService;
-import org.apache.coyote.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +34,8 @@ public class TicketServiceTest {
 
     @Test
     void getCabinetTest(){
-        System.out.println(ticketService.getAllCabinet());
+        String json = JSON.toJSONString(ticketService.getAllCabinet());
+        System.out.println(json);
     }
 
     @Test
@@ -47,7 +46,8 @@ public class TicketServiceTest {
 
     @Test
     void getSupervisorTest(){
-        System.out.println(ticketService.getAllSupervisor());
+        String json = JSON.toJSONString(ticketService.getAllSupervisor());
+        System.out.println(json);
     }
 
 //    @Test
@@ -65,8 +65,13 @@ public class TicketServiceTest {
 //    }
 
     @Test
-    void getTicketInfoByTicketIdTest(){
-        Long ticketId = 1L;
+    void getTicketAmountByUserId(){
+        String json = JSON.toJSONString(ticketService.getTicketAmount());
+        System.out.println(json);
+    }
+    @Test
+    void getStepsByTicketIdTest(){
+        Long ticketId = 27L;
         ResponseResult result = ticketService.getTicketSteps(ticketId);
         String json = JSON.toJSONString(result);
         System.out.println(json);
@@ -74,7 +79,7 @@ public class TicketServiceTest {
 
     @Test
     void getTicketPageByUserId(){
-        ResponseResult result = ticketService.getTicketListPage(1);
+        ResponseResult result = ticketService.getTicketListPage(0);
         String json = JSON.toJSONString(result);
         System.out.println(json);
     }
@@ -97,4 +102,10 @@ public class TicketServiceTest {
         ticketService.saveTicket(ticket);
     }
 
+
+    @Test
+    void getTicketByStatus(){
+        String json = JSON.toJSONString(ticketService.getTicketByStatus("未完成"));
+        System.out.println(json);
+    }
 }

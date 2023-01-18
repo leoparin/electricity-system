@@ -1,14 +1,11 @@
 package com.leo.electricitysystem.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.leo.electricitysystem.domain.CabinetError;
-import com.leo.electricitysystem.domain.OperationError;
-import com.leo.electricitysystem.domain.UniformError;
+import com.leo.electricitysystem.domain.*;
 import com.leo.electricitysystem.exception.IdNotFoundException;
-import com.leo.electricitysystem.mapper.CabinetErrorMapper;
-import com.leo.electricitysystem.mapper.OperationErrorMapper;
-import com.leo.electricitysystem.mapper.UniformErrorMapper;
+import com.leo.electricitysystem.mapper.*;
 import com.leo.electricitysystem.response.ResponseResult;
+import org.apache.el.lang.LambdaExpressionNestedState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,7 +36,7 @@ public class ErrorService {
         queryWrapper.eq(UniformError::getTicketId,ticketId);
         UniformError result = uniformErrorMapper.selectOne(queryWrapper);
         if(Objects.isNull(result)){
-            throw new IdNotFoundException("无服装错误");
+            throw new IdNotFoundException("暂无服装错误");
         }
         return new ResponseResult(HttpStatus.OK.value(),"get uniform error success",result);
     }
@@ -67,13 +64,18 @@ public class ErrorService {
         return new ResponseResult(HttpStatus.OK.value(), "get cabinet error success",result);
     }
 
+    @Autowired
+    private TicketMapper ticketMapper;
     public ResponseResult saveUniformError(UniformError uniformError) {
         int flag = uniformErrorMapper.insert(uniformError);
+
         if(flag==0){
             throw new IdNotFoundException("write uniform error fail");
         }
         return new ResponseResult(HttpStatus.OK.value(),"write uniform error success");
     }
+
+
 
     public ResponseResult saveCabinetError(CabinetError cabinetError) {
         int flag = cabinetErrorMapper.insert(cabinetError);
@@ -83,8 +85,21 @@ public class ErrorService {
         return new ResponseResult(HttpStatus.OK.value(),"write cabinet error success");
     }
 
+    @Autowired
+    private StepMapper stepMapper;
     public ResponseResult saveOperationError(OperationError operationError) {
         int flag = operationErrorMapper.insert(operationError);
+        //use multi-thread to update step status
+        Runnable r = () -> {
+            LambdaQueryWrapper<OperationStep> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(OperationStep::getId,operationError.getStepId());
+            OperationStep step = new OperationStep();
+            step.setCompleteStatus("错误");
+            stepMapper.update(step,queryWrapper);
+        };
+        Thread thread = new Thread(r);
+        thread.start();
+
         if(flag==0){
             throw new IdNotFoundException("write operation error fail");
         }

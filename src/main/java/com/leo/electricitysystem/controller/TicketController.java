@@ -26,7 +26,7 @@ public class TicketController {
     @Autowired
     private TicketService ticketService;
     /*
-     * 查看所有开关
+     * 查看所有开关，操作柜，工人，监督员
      * @return 开关List
      */
     @GetMapping("/switch")
@@ -49,13 +49,19 @@ public class TicketController {
         return  ticketService.getAllSupervisor();
     }
 
+    /*
+     * 写操作票
+     */
     @PostMapping
     public ResponseResult saveTicket(@RequestBody FullTicket fullTicket){
         return ticketService.saveTicket(fullTicket);
     }
 
     /*
-     * pageSize: 5
+     * 通过userid获取ticketPage
+     * metadata:pageSize: 5
+     * input:currentPage
+     * output:
      */
     @GetMapping("/page/{currentPage}")
     public ResponseResult getTicketByUserId(@PathVariable int currentPage){
@@ -63,11 +69,21 @@ public class TicketController {
         return ticketService.getTicketListPage(currentPage);
     }
 
+    /**
+     *
+     * @param status
+     * @return R
+     */
     @GetMapping("/status/{status}")
     public ResponseResult getTicketByStatus(@PathVariable  String status){
         return ticketService.getTicketByStatus(status);//todo:分页
     }
 
+    /**
+     * 通过ticketId获取所有步骤
+     * @param id
+     * @return
+     */
     @GetMapping("/steps/{id}")
     public ResponseResult getStepsById(@PathVariable Long id){
         //使用mp根据id查
@@ -82,8 +98,11 @@ public class TicketController {
         return ticketService.getTicketAmount();
     }
 
-
-
+    /**
+     * 通过ticketid删除ticket
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public ResponseResult delete(@PathVariable Long id){
         return ticketService.delete(id);
@@ -93,4 +112,15 @@ public class TicketController {
 //    public ResponseResult getAllInfo(@PathVariable Long id){
 //        return ticketService.getTicketAllInfo(id);
 //    }
+
+    /**
+     * 通过ticketId更新ticket状态
+     * @param status
+     * @param ticketId
+     * @return
+     */
+    @PutMapping("/{ticketId}/{status}")
+    public ResponseResult putStatus(@PathVariable String status,@PathVariable Long ticketId){
+        return ticketService.updateTicketStatus(status,ticketId);
+    }
 }

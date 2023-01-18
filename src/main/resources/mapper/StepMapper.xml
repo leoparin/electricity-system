@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.leo.electricitysystem.mapper.StepMapper">
+
+    <select id="selectStepList" resultType="com.leo.electricitysystem.domain.result.StepResult">
+        select
+            os.id,os.description, os.step_order,ss.switch_status,sl.switch_name,sl.switch_type
+        from
+            operation_steps os
+                left join  step_switch ss on os.id = ss.step_id
+                left join  switches_light sl on ss.switch_id = sl.id
+        where os.ticket_id = #{ticketId};
+    </select>
+
+</mapper>

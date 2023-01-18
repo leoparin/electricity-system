@@ -2,10 +2,7 @@ package com.leo.electricitysystem.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-
-import java.util.Date;
 
 /**
  * ClassName:OperationTickets
@@ -50,5 +47,9 @@ public class OperationTicket {
     private String completeStatus;
 
     private String taskName;
+
+    public void setCompleteStatus(String completeStatus) {
+        this.completeStatus = completeStatus;
+    }
 }
 

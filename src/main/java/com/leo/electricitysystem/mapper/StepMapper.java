@@ -2,7 +2,11 @@ package com.leo.electricitysystem.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leo.electricitysystem.domain.OperationStep;
+import com.leo.electricitysystem.domain.StepSwitch;
+import com.leo.electricitysystem.domain.result.StepResult;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * ClassName:StepMapper
@@ -14,4 +18,5 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface StepMapper extends BaseMapper<OperationStep> {
+    List<StepResult> selectStepList(Long ticketId);
 }

@@ -2,19 +2,19 @@ package com.leo.electricitysystem.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.*;
+import com.leo.electricitysystem.domain.result.StepResult;
 import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.mapper.*;
 import com.leo.electricitysystem.request.FullTicket;
 import com.leo.electricitysystem.response.ResponseResult;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
  * @Author leo
  **/
 @Service
+@ConfigurationProperties(prefix = "ticket.page")
 public class TicketService {
 
     @Autowired
@@ -45,26 +46,22 @@ public class TicketService {
     public ResponseResult getAllSwitch(){
         List<SwitchOrLight> switches;
         LambdaQueryWrapper<SwitchOrLight> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(SwitchOrLight::getId,SwitchOrLight::getSwitchName);
         switches =switchMapper.selectList(queryWrapper);
         if(Objects.isNull(switches)){
             throw new RuntimeException("数据库中无开关");
         }
-        return new ResponseResult(HttpStatus.OK.value(),switches);
+        return new ResponseResult(HttpStatus.OK.value(),"get switch success",switches);
     }
 
     @Autowired
     private CabinetMapper cabinetMapper;
     public ResponseResult getAllCabinet() {
-        Map<Long,String> cabinet;
         LambdaQueryWrapper<ElectricCabinet> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(ElectricCabinet::getId,ElectricCabinet::getCabinetName);
-        cabinet =cabinetMapper.selectList(queryWrapper).stream()
-                .collect(Collectors.toMap(ElectricCabinet::getId, ElectricCabinet::getCabinetName));
+        List<ElectricCabinet> cabinet =cabinetMapper.selectList(queryWrapper);
         if(Objects.isNull(cabinet)){
             throw new RuntimeException("数据库中无操作柜");
         }
-        return new ResponseResult(HttpStatus.OK.value(),cabinet);
+        return new ResponseResult(HttpStatus.OK.value(),"get cabinets success",cabinet);
     }
 
     @Autowired
@@ -88,13 +85,13 @@ public class TicketService {
     public ResponseResult getAllSupervisor(){
         Map<Long,String> supervisor;
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(User::getUserName).eq(User::getUserType,"3");
+        queryWrapper.select(User::getId,User::getUserName).eq(User::getUserType,"监督员");
         supervisor = userMapper.selectList(queryWrapper).stream()
                 .collect(Collectors.toMap(User::getId, User::getUserName));
         if(Objects.isNull(supervisor)){
             throw new RuntimeException("数据库中无监督员");
         }
-        return new ResponseResult(HttpStatus.OK.value(),supervisor);
+        return new ResponseResult(HttpStatus.OK.value(),"get supervisor success",supervisor);
     }
 
     /*
@@ -118,7 +115,7 @@ public class TicketService {
                             stepSwitch.getStepOrder(), stepSwitch.getSwitchStatus()));
                 else break;
             }
-        }//todo:steps complete status
+        }
 
         //TODO: 插入失败处理
         return new ResponseResult(HttpStatus.OK.value() , "write ticket success");
@@ -133,7 +130,8 @@ public class TicketService {
         //获取loginUser id
         //todo:page size metadata
         //TODO: 做登陆的时候改成从contextHolder里面取授权对象
-        LoginUser user = new LoginUser(3L,"Josh" , "工人");
+        //todo：这里工人是硬编码的
+        LoginUser user = new LoginUser(3L,"王三" , "工人");
         //从数据库查询
 //        LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
 //
@@ -141,8 +139,9 @@ public class TicketService {
 //                OperationTicket::getWorkerId);
 //        List<OperationTicket> result = ticketMapper.selectList(queryWrapper);
 
+        int pageSize = 3;
         int offset = currentPage * 5;
-        List<OperationTicket> result= ticketMapper.selectTicketPageByUserID(offset,user);
+        List<OperationTicket> result= ticketMapper.selectTicketPageByUserID(offset,user,pageSize);
         if(result.size()==0){
             throw new IdNotFoundException("get page fail,do not have enough ticket");
         }//TODO: 修改throws
@@ -158,17 +157,17 @@ public class TicketService {
      */
     public ResponseResult getTicketSteps(Long ticketId){
         //前端返回选择了哪张ticket
-        LambdaQueryWrapper<OperationStep> queryWrapper = new LambdaQueryWrapper<>();
-
-        //select stepOrder,description,step id,complete status from step table
-        queryWrapper.select(OperationStep::getStepOrder,OperationStep::getDescription,
-                OperationStep::getId,OperationStep::getCompleteStatus)
-                .eq(OperationStep::getTicketId,ticketId)
-                .orderByAsc(OperationStep::getStepOrder);
+//        LambdaQueryWrapper<OperationStep> queryWrapper = new LambdaQueryWrapper<>();
+//
+//        //select stepOrder,description,step id,complete status from step table
+//        queryWrapper.select(OperationStep::getStepOrder,OperationStep::getDescription,
+//                OperationStep::getId,OperationStep::getCompleteStatus)
+//                .eq(OperationStep::getTicketId,ticketId)
+//                .orderByAsc(OperationStep::getStepOrder);
 
 //        Map<Integer, OperationStep> steps = stepMapper.selectList(queryWrapper)
 //                .stream().collect(Collectors.toMap(OperationStep::getStepOrder, Function.identity()));
-        List<OperationStep> steps = stepMapper.selectList(queryWrapper);
+        List<StepResult> steps = stepMapper.selectStepList(ticketId);
         //return list of step Map
         //根据ticket查step表
         if(steps.size()==0){
@@ -183,16 +182,11 @@ public class TicketService {
     public ResponseResult getTicketByStatus(String status) {
         LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
 
-        queryWrapper.select(
-                        OperationTicket::getCreateTime, OperationTicket::getId,
-                        OperationTicket::getAdminId, OperationTicket::getAdminName,
-                        OperationTicket::getWorkerId, OperationTicket::getWorkerName, OperationTicket::getSupervisorName,
-                        OperationTicket::getCompleteStatus, OperationTicket::getTaskName)
-                .eq(OperationTicket::getCompleteStatus, status);
+        queryWrapper.eq(OperationTicket::getCompleteStatus, status);
 
         List<OperationTicket> result =  ticketMapper.selectList(queryWrapper);
 
-        return new ResponseResult(200,result);
+        return new ResponseResult(200,"get ticket success",result);
 
     }
 
@@ -212,5 +206,17 @@ public class TicketService {
             throw new IdNotFoundException("no ticket in current account");
         }
         return new ResponseResult(HttpStatus.OK.value(),"get amount success",result);
+    }
+
+    public ResponseResult updateTicketStatus(String status, Long ticketId) {
+        LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OperationTicket::getId,ticketId);
+        OperationTicket ticket = new OperationTicket();
+        ticket.setCompleteStatus(status);
+        int flag = ticketMapper.update(ticket,queryWrapper);
+        if(flag==0){
+            throw new IdNotFoundException("update fail");
+        }
+        return new ResponseResult(HttpStatus.OK.value(),"update ticket status success");
     }
 }

@@ -13,6 +13,4 @@
                 LEFT JOIN sys_user u on ue.worker_id = u.id
         WHERE worker_id = #{userId};
     </select>
-
-
 </mapper>

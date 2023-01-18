@@ -3,6 +3,7 @@ package com.leo.electricitysystem.domain;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * ClassName:OperationSteps
@@ -14,6 +15,7 @@ import lombok.Data;
  **/
 @Data
 @TableName("operation_steps")
+@NoArgsConstructor
 public class OperationStep {
 
     @TableId

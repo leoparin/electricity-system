@@ -29,7 +29,6 @@ public class UniformError {
 
     private String result;
 
-
     private String helmet;
 
     private String  gloves;

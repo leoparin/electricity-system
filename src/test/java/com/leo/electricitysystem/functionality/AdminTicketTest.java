@@ -221,4 +221,13 @@ public class AdminTicketTest {
     }
 
 
+    @Test
+    @DisplayName("更新操作票状态")
+    void updateStatus() throws Exception {
+        mockMvc.perform(put("/ticket/1/进行中"))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.msg").value("update ticket status success")
+                );
+    }
 }

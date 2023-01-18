@@ -15,8 +15,6 @@ import lombok.Data;
 @Data
 @TableName("switches_light")
 public class SwitchOrLight {
-
-
     /*
      * 开关id
      */
@@ -26,4 +24,6 @@ public class SwitchOrLight {
     * 开关名称
      */
     private String switchName;
+
+    private String switchType;
 }

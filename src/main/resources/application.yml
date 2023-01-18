@@ -8,3 +8,6 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+ticket:
+  page:
+    pageSize:5

@@ -35,7 +35,7 @@ public interface TicketMapper extends BaseMapper<OperationTicket> {
     void insertSwitch(StepSwitch stepSwitch);
 
     //todo: 修改分页查询的当前页码
-    List<OperationTicket> selectTicketPageByUserID(int offset,LoginUser loginUser);
+    List<OperationTicket> selectTicketPageByUserID(int offset,LoginUser loginUser,int pageSize);
 
     int selectTicketAmount(@Param("loginUser") LoginUser loginUser);
 }

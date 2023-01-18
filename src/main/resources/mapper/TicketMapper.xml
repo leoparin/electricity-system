@@ -40,7 +40,7 @@
             where #{loginUser.id} = admin_id
         </otherwise>
         </choose>
-        LIMIT #{offset},3;
+        LIMIT #{offset},#{pageSize};
     </select>
 
     <select id="selectTicketAmount" resultType="java.lang.Integer">

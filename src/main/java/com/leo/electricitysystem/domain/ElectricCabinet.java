@@ -25,4 +25,10 @@ public class ElectricCabinet {
      * 开关名称
      */
     private String cabinetName;
+
+    private String platenOrder;
+
+    private String switchOrder;
+
+    private String lightOrder;
 }
