@@ -48,6 +48,8 @@ public class OperationTicket {
 
     private String taskName;
 
+    private Long cabinetId;
+
     public void setCompleteStatus(String completeStatus) {
         this.completeStatus = completeStatus;
     }

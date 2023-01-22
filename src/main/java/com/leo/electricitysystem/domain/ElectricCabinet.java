@@ -31,4 +31,6 @@ public class ElectricCabinet {
     private String switchOrder;
 
     private String lightOrder;
+
+    private Long monitorId;
 }

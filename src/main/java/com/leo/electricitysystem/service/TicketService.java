@@ -2,6 +2,7 @@ package com.leo.electricitysystem.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.*;
+import com.leo.electricitysystem.domain.result.CabinetResult;
 import com.leo.electricitysystem.domain.result.StepResult;
 import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.mapper.*;
@@ -218,5 +219,34 @@ public class TicketService {
             throw new IdNotFoundException("update fail");
         }
         return new ResponseResult(HttpStatus.OK.value(),"update ticket status success");
+    }
+
+    public ResponseResult getTicketById(Long id) {
+//        LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(OperationTicket::getId,id);
+        OperationTicket ticket = ticketMapper.selectById(id);
+        if(Objects.isNull(ticket)){
+            throw new IdNotFoundException("操作票不存在");
+        }
+        return new ResponseResult(HttpStatus.OK.value(),"get ticket success",ticket);
+    }
+
+    @Autowired
+    MoniterMapper moniterMapper;
+    public ResponseResult getCabinetAndMoniter(Long cabinetId) {
+        ElectricCabinet cabinet = cabinetMapper.selectById(cabinetId);
+        LambdaQueryWrapper<ElectricCabinet> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ElectricCabinet::getMonitorId,cabinet.getMonitorId());
+        List<ElectricCabinet> cabinets = cabinetMapper.selectList(queryWrapper);
+        Moniter moniter = moniterMapper.selectById(cabinet.getMonitorId());
+
+        CabinetResult result = new CabinetResult();
+        result.setCabinets(cabinets);
+        result.setMoniter(moniter);
+
+        if(Objects.isNull(result)){
+            throw new IdNotFoundException("监控和操作柜不存在");
+        }
+        return new ResponseResult(HttpStatus.OK.value(), "get cabinet and monitor success",result);
     }
 }

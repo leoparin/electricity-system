@@ -98,7 +98,7 @@ public class TicketServiceTest {
         );
         FullTicket ticket = new FullTicket(null,"10kV××线***开关由运行转检修",
                 "leo","Josh",1L,3L,"王武",
-                "2023-01-10 21:06:28","2023-01-10 21:06:28",steps,switches);
+                "2023-01-10 21:06:28","2023-01-10 21:06:28",1L,steps,switches);
         ticketService.saveTicket(ticket);
     }
 

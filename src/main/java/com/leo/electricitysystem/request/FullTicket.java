@@ -39,6 +39,8 @@ public class FullTicket {
 
     String completeTime;
 
+    Long cabinetId;
+
     List<String> Steps;
 
     //写一个switchstep表对象，List map

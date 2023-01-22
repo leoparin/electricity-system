@@ -25,6 +25,7 @@ public class TicketController {
 
     @Autowired
     private TicketService ticketService;
+
     /*
      * 查看所有开关，操作柜，工人，监督员
      * @return 开关List
@@ -108,10 +109,10 @@ public class TicketController {
         return ticketService.delete(id);
     }
 
-//    @GetMapping("/all/{id}")
-//    public ResponseResult getAllInfo(@PathVariable Long id){
-//        return ticketService.getTicketAllInfo(id);
-//    }
+    @GetMapping("/{id}")
+    public ResponseResult getAllInfo(@PathVariable Long id){
+        return ticketService.getTicketById(id);
+    }
 
     /**
      * 通过ticketId更新ticket状态
@@ -122,5 +123,13 @@ public class TicketController {
     @PutMapping("/{ticketId}/{status}")
     public ResponseResult putStatus(@PathVariable String status,@PathVariable Long ticketId){
         return ticketService.updateTicketStatus(status,ticketId);
+    }
+
+    /**
+     * 查看监控对应的cabinet List
+     */
+    @GetMapping("/cabinetList/{cabinetId}")
+    public ResponseResult getCabinetList(@PathVariable Long cabinetId){
+        return ticketService.getCabinetAndMoniter(cabinetId);
     }
 }

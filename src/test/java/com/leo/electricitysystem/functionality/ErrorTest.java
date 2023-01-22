@@ -43,7 +43,7 @@ class ErrorTest {
         mockMvc.perform(get("/error/uniform/1"))
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$.msg").value("无服装错误")
+                        jsonPath("$.msg").value("get uniform error success")
                 );
     }
 

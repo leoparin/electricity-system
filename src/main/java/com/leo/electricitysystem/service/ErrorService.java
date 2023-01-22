@@ -5,12 +5,10 @@ import com.leo.electricitysystem.domain.*;
 import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.mapper.*;
 import com.leo.electricitysystem.response.ResponseResult;
-import org.apache.el.lang.LambdaExpressionNestedState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 

@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.OperationError;
 import com.leo.electricitysystem.domain.OperationStep;
-import com.leo.electricitysystem.domain.OperationTicket;
 import com.leo.electricitysystem.mapper.StepMapper;
 import com.leo.electricitysystem.response.ResponseResult;
 import com.leo.electricitysystem.service.ErrorService;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,7 @@ public class ErrorServiceTest {
 
     @Test
     void selectUniformErrorByIdTest(){
-        Long id = 3L;
+        Long id = 2L;
         ResponseResult result = errorService.getUniformErrorByTicketId(id);
         String json = JSON.toJSONString(result);
         System.out.println(json);
@@ -41,7 +39,7 @@ public class ErrorServiceTest {
 
     @Test
     void selectOperationErrorByStepIdTest(){
-        Long id = 1L;
+        Long id = 2L;
         ResponseResult result = errorService.getOperationErrorByStepId(id);
         String json = JSON.toJSONString(result);
         System.out.println(json);
@@ -84,7 +82,4 @@ public class ErrorServiceTest {
         assertEquals(stepMapper.selectOne(queryWrapper).getCompleteStatus(), "错误");
     }
 
-    @Test
-    void saveCabinetError() {
-    }
 }

@@ -9,8 +9,8 @@
             select last_insert_id()
         </selectKey>
        -- 插入操作票
-        INSERT into operation_ticket(create_time,complete_time,task_name,admin_name,admin_id,worker_name,worker_id,supervisor_name)
-        VALUES (#{createTime},#{completeTime},#{taskName},#{adminName},#{adminId},#{workerName},#{workerId},#{supervisorName});
+        INSERT into operation_ticket(create_time,complete_time,task_name,admin_name,admin_id,worker_name,worker_id,supervisor_name,cabinet_id)
+        VALUES (#{createTime},#{completeTime},#{taskName},#{adminName},#{adminId},#{workerName},#{workerId},#{supervisorName},#{cabinetId});
     </insert>
 
     <insert id="insertSteps" useGeneratedKeys="true">

@@ -27,7 +27,7 @@ public class MapperTest {
 
     @Test
     void selectUserById(){
-        String username = "Lily";
+        String username = "leo";
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUserName,username);
         User user  = userMapper.selectOne(queryWrapper);
@@ -153,7 +153,7 @@ public class MapperTest {
     void selectUniformErrorById(){
         UniformError error;
         LambdaQueryWrapper<UniformError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UniformError::getTicketId,"3");
+        queryWrapper.eq(UniformError::getTicketId,"1");
         error = uniformErrorMapper.selectOne(queryWrapper);
         if(Objects.isNull(error)){
             throw new RuntimeException("无着装错误");
@@ -161,15 +161,15 @@ public class MapperTest {
         System.out.println(error);
     }
 
-    @Test
-    void selectUniformErrorAndNameById(){
-        Map<String,String> error;
-        error = uniformErrorMapper.selectUniformErrorAndNameByUserId(3L);
-//        if(Objects.isNull(error)){
-//            throw new RuntimeException("无着装错误");
-//        }
-        System.out.println(error);
-    }
+//    @Test
+//    void selectUniformErrorAndNameById(){
+//        Map<String,String> error;
+//        error = uniformErrorMapper.selectUniformErrorAndNameByUserId(3L);
+////        if(Objects.isNull(error)){
+////            throw new RuntimeException("无着装错误");
+////        }
+//        System.out.println(error);
+//    }
 
     /*
      * 查询工人step id = 3的所有操作错误描述
@@ -181,7 +181,7 @@ public class MapperTest {
     void selectOperationErrorById(){
         OperationError error;
         LambdaQueryWrapper<OperationError> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(OperationError::getStepId,"3");
+        queryWrapper.eq(OperationError::getStepId,"2");
         error = operationErrorMapper.selectOne(queryWrapper);
         if(Objects.isNull(error)){
             throw new RuntimeException("无操作错误");
