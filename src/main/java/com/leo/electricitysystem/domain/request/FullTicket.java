@@ -1,4 +1,4 @@
-package com.leo.electricitysystem.request;
+package com.leo.electricitysystem.domain.request;
 
 import com.leo.electricitysystem.domain.OperationStep;
 import com.leo.electricitysystem.domain.StepSwitch;

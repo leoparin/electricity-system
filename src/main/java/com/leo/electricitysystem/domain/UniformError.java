@@ -36,4 +36,13 @@ public class UniformError {
     private String  uniform;
 
     private String img;
+
+    public UniformError(long id, String result, String helmet, String gloves, String uniform, String img) {
+        this.ticketId = id;
+        this.gloves = gloves;
+        this.uniform = uniform;
+        this.img = img;
+        this.helmet = helmet;
+        this.result = result;
+    }
 }

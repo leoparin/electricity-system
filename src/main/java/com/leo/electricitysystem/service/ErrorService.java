@@ -4,13 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.*;
 import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.mapper.*;
-import com.leo.electricitysystem.response.ResponseResult;
+import com.leo.electricitysystem.domain.response.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * ClassName:ErrorService
@@ -39,7 +38,6 @@ public class ErrorService {
         return new ResponseResult(HttpStatus.OK.value(),"get uniform error success",result);
     }
 
-
     @Autowired
     private OperationErrorMapper operationErrorMapper;
     public ResponseResult getOperationErrorByStepId(Long stepId) {
@@ -65,18 +63,16 @@ public class ErrorService {
     @Autowired
     private TicketMapper ticketMapper;
     public ResponseResult saveUniformError(UniformError uniformError) {
-        int flag = uniformErrorMapper.insert(uniformError);
-
-        if(flag==0){
+//        int flag = uniformErrorMapper.insert(uniformError);
+        int flag = uniformErrorMapper.insertUniformError(uniformError);
+        if(Objects.isNull(flag)){
             throw new IdNotFoundException("write uniform error fail");
         }
         return new ResponseResult(HttpStatus.OK.value(),"write uniform error success");
     }
 
-
-
     public ResponseResult saveCabinetError(CabinetError cabinetError) {
-        int flag = cabinetErrorMapper.insert(cabinetError);
+        int flag = cabinetErrorMapper.insertCabinetError(cabinetError);
         if(flag==0){
             throw new IdNotFoundException("write cabinet error fail");
         }
@@ -86,7 +82,7 @@ public class ErrorService {
     @Autowired
     private StepMapper stepMapper;
     public ResponseResult saveOperationError(OperationError operationError) {
-        int flag = operationErrorMapper.insert(operationError);
+        int flag = operationErrorMapper.insertOperationError(operationError);
         //use multi-thread to update step status
         Runnable r = () -> {
             LambdaQueryWrapper<OperationStep> queryWrapper = new LambdaQueryWrapper<>();

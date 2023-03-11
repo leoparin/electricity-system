@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.OperationError;
 import com.leo.electricitysystem.domain.OperationStep;
+import com.leo.electricitysystem.domain.UniformError;
 import com.leo.electricitysystem.mapper.StepMapper;
-import com.leo.electricitysystem.response.ResponseResult;
+import com.leo.electricitysystem.domain.response.ResponseResult;
+import com.leo.electricitysystem.mapper.UniformErrorMapper;
 import com.leo.electricitysystem.service.ErrorService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,5 +83,16 @@ public class ErrorServiceTest {
         queryWrapper.eq(OperationStep::getId,40L);
         assertEquals(stepMapper.selectOne(queryWrapper).getCompleteStatus(), "错误");
     }
+
+    @Autowired
+    UniformErrorMapper uniformErrorMapper;
+    @Test
+    void insertUniformErrorTest(){
+        UniformError error =  new UniformError(18L,"True",
+                "True","True","True","abcl");
+        int flag = uniformErrorMapper.insertUniformError(error);
+        System.out.println(flag);
+    }
+
 
 }

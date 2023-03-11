@@ -2,8 +2,8 @@ package com.leo.electricitysystem.unit;
 
 import com.alibaba.fastjson.JSON;
 import com.leo.electricitysystem.domain.StepSwitch;
-import com.leo.electricitysystem.request.FullTicket;
-import com.leo.electricitysystem.response.ResponseResult;
+import com.leo.electricitysystem.domain.request.FullTicket;
+import com.leo.electricitysystem.domain.response.ResponseResult;
 import com.leo.electricitysystem.service.TicketService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -107,5 +107,16 @@ public class TicketServiceTest {
     void getTicketByStatus(){
         String json = JSON.toJSONString(ticketService.getTicketByStatus("未完成"));
         System.out.println(json);
+    }
+
+    @Test
+    void updateTicketStatus(){
+        String status = "进行中";
+        Long ticketId = 2L;
+
+        ResponseResult result = ticketService.updateTicketStatus(status,ticketId);
+        String json = JSON.toJSONString(result);
+        System.out.println(json);
+
     }
 }

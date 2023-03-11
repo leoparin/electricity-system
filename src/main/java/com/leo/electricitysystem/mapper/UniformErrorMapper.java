@@ -20,4 +20,8 @@ import java.util.Map;
 public interface UniformErrorMapper extends BaseMapper<UniformError> {
     @MapKey("user_name")
     public Map<String,String> selectUniformErrorAndNameByUserId(Long id);
+
+    public List<UniformError> getUniformErrorByWorkerId(Long id);
+
+    public int insertUniformError(UniformError uniformError);
 }

@@ -1,4 +1,4 @@
-package com.leo.electricitysystem.response;
+package com.leo.electricitysystem.domain.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leo.electricitysystem.domain.OperationStep;

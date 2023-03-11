@@ -25,10 +25,15 @@ public class LoginUser implements UserDetails {
 
     private String userType;
 
+    public LoginUser(Long id){
+        this.id = id;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
+
 
     @Override
     public String getPassword() {

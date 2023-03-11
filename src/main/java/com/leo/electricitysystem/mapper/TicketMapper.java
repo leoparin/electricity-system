@@ -5,11 +5,12 @@ import com.leo.electricitysystem.domain.LoginUser;
 import com.leo.electricitysystem.domain.OperationStep;
 import com.leo.electricitysystem.domain.OperationTicket;
 import com.leo.electricitysystem.domain.StepSwitch;
-import com.leo.electricitysystem.request.FullTicket;
+import com.leo.electricitysystem.domain.dto.StatisticTransfer;
+import com.leo.electricitysystem.domain.request.FullTicket;
+import com.leo.electricitysystem.domain.request.StatisticRequest;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -38,4 +39,6 @@ public interface TicketMapper extends BaseMapper<OperationTicket> {
     List<OperationTicket> selectTicketPageByUserID(int offset,LoginUser loginUser,int pageSize);
 
     int selectTicketAmount(@Param("loginUser") LoginUser loginUser);
+
+    Integer getTicketAmountByWorkerIdAndTime(@Param("statisticTransfer")StatisticTransfer statisticTransfer);
 }

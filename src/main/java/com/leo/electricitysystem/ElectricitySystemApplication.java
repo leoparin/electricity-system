@@ -11,5 +11,7 @@ public class ElectricitySystemApplication {
     public static void main(String[] args) {
         SpringApplication.run(ElectricitySystemApplication.class, args);
     }
-
+    /*
+    todo：地区表 登录授权
+     */
 }

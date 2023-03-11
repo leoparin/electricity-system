@@ -14,4 +14,5 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface OperationErrorMapper extends BaseMapper<OperationError> {
+    int insertOperationError(OperationError operationError);
 }

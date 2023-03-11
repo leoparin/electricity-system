@@ -3,7 +3,7 @@ package com.leo.electricitysystem.functionality;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leo.electricitysystem.domain.StepSwitch;
 import com.leo.electricitysystem.mapper.TicketMapper;
-import com.leo.electricitysystem.request.FullTicket;
+import com.leo.electricitysystem.domain.request.FullTicket;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class AdminTicketTest {
     /*
      * 管理员查看操作票分页的list
      * @API /ticket/write
-     * @return responseResult status 200 msg:"write success"  data:  null
+     * @return responseResult status 200 msg: "write success"  data:  null
      */
 
     @Test
@@ -224,7 +223,7 @@ public class AdminTicketTest {
     @Test
     @DisplayName("更新操作票状态")
     void updateStatus() throws Exception {
-        mockMvc.perform(put("/ticket/1/进行中"))
+        mockMvc.perform(put("/ticket/2/进行中"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.msg").value("update ticket status success")

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.leo.electricitysystem.mapper.OperationErrorMapper">
+    <insert id="insertOperationError">
+        INSERT INTO operation_error(ticket_id,need_procedure,actual_procedure,create_time,update_time,img,result)
+        VALUES (#ticket_id,#needProcedure, #actualProcedure, CURRENT_TIME(),CURRENT_TIME(),#img,#result);
+    </insert>
+</mapper>

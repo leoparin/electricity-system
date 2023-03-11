@@ -6,8 +6,8 @@ import com.leo.electricitysystem.domain.result.CabinetResult;
 import com.leo.electricitysystem.domain.result.StepResult;
 import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.mapper.*;
-import com.leo.electricitysystem.request.FullTicket;
-import com.leo.electricitysystem.response.ResponseResult;
+import com.leo.electricitysystem.domain.request.FullTicket;
+import com.leo.electricitysystem.domain.response.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,7 @@ public class TicketService {
     public ResponseResult getAllSwitch(){
         List<SwitchOrLight> switches;
         LambdaQueryWrapper<SwitchOrLight> queryWrapper = new LambdaQueryWrapper<>();
-        switches =switchMapper.selectList(queryWrapper);
+        switches = switchMapper.selectList(queryWrapper);
         if(Objects.isNull(switches)){
             throw new RuntimeException("数据库中无开关");
         }
@@ -99,7 +99,6 @@ public class TicketService {
      * 管理员写操作票
      */
    // @Autowired
-   // private StepSwitchMapper stepSwitchMapper;
     public ResponseResult saveTicket(FullTicket fullTicket){
         ticketMapper.insertTicket(fullTicket);
         //select key 会把主键放在model的主键中
@@ -190,6 +189,8 @@ public class TicketService {
         return new ResponseResult(200,"get ticket success",result);
 
     }
+
+
 
     public ResponseResult delete(Long id) {
         int flag =  ticketMapper.deleteById(id);
