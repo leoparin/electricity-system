@@ -26,7 +26,17 @@ public class StatisticController {
 
     @GetMapping("uniformError")
     ResponseResult getUniformErrorNum(@RequestBody StatisticRequest request){
-//        return statisticService.getUniformErrorNum(request);
-        return null;
+        return statisticService.getUniformErrorNum(request);
+//        return null;
+    }
+
+    @GetMapping("cabinetError")
+    ResponseResult getCabinetErrorNum(@RequestBody StatisticRequest request){
+        return statisticService.getCabinetErrorNum(request);
+    }
+
+    @GetMapping("operationError")
+    ResponseResult getOperationErrorNum(@RequestBody StatisticRequest request){
+        return statisticService.getOperationErrorNum(request);
     }
 }

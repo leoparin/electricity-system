@@ -2,6 +2,7 @@ package com.leo.electricitysystem.domain.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leo.electricitysystem.domain.OperationStep;
+import com.leo.electricitysystem.domain.result.OperationErrorResponse;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -68,6 +69,7 @@ public class ResponseResult {
     public ResponseResult( String msg) {
             this.msg = msg;
     }
+
 
     public Integer getCode() {
 

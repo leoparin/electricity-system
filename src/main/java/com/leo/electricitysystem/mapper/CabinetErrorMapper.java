@@ -15,4 +15,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CabinetErrorMapper extends BaseMapper<CabinetError> {
     public int insertCabinetError(CabinetError cabinetError);
+
+    Integer getCabinetErrorTicketAmount(Integer month, Long workerId);
 }

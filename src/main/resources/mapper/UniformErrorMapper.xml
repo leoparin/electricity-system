@@ -18,14 +18,18 @@
         WHERE worker_id = #{userId};
     </select>
 
-    <select id="getUniformErrorByWorkerId" resultType="com.leo.electricitysystem.domain.UniformError">
+    <select id="getUniformErrorByWorkerIdAndTime" resultType="com.leo.electricitysystem.domain.result.UniformErrorResult">
         select *
-        from uniform_error ue
-                 left join operation_ticket ot on ue.ticket_id = ot.id
-                 left join sys_user u on ot.worker_id = #{id}
-        where u.id = #{id};
+        from worker_uniform_error_view ue
+        where ue.worker_id = #{id}
+        and DATE_SUB(CURRENT_DATE(),INTERVAL #{month} month) &lt;= create_time;
     </select>
 
+    <select id="getUniformErrorTicketNum" resultType="java.lang.Integer">
+        select count(distinct ue.create_time)
+        from worker_uniform_error_view ue
+        where ue.worker_id = #{id}
+          and DATE_SUB(CURRENT_DATE(),INTERVAL #{month} month) &lt;= create_time;
+    </select>
 
-    
 </mapper>

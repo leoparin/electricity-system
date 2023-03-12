@@ -7,4 +7,18 @@
         INSERT INTO operation_error(ticket_id,need_procedure,actual_procedure,create_time,update_time,img,result)
         VALUES (#ticket_id,#needProcedure, #actualProcedure, CURRENT_TIME(),CURRENT_TIME(),#img,#result);
     </insert>
+
+    <select id="getOperationErrorList" resultType="com.leo.electricitysystem.domain.result.OperationErrorResult">
+        -- 某段时间内某工人的操作错误的所有操作票数目
+        select *
+        from operation_error_view
+        where worker_id = #{workerId} and DATE_SUB(CURRENT_DATE,INTERVAL #{month} month) &lt;= error_create_time;
+    </select>
+
+    <select id="getOperationErrorAmount" resultType="java.lang.Integer">
+        -- 某段时间内某工人的操作错误的所有操作票数目
+        select count(distinct ticket_id)
+        from operation_error_view
+        where worker_id = #{workerId} and DATE_SUB(CURRENT_DATE,INTERVAL #{month} month) &lt;= error_create_time;
+    </select>
 </mapper>

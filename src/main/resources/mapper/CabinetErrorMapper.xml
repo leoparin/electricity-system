@@ -8,5 +8,13 @@
         INSERT INTO cabinet_error(ticket_id,need_cabinet,actual_cabinet,create_time,update_time,img,result)
         VALUES (#ticket_id,#needCabinet, #actualCabinet, CURRENT_TIME(),CURRENT_TIME(),#img,#result);
     </insert>
+    <select id="getCabinetErrorTicketAmount" resultType="java.lang.Integer">
+        --	某段时间内某工人的操作柜错误的所有操作票数目
+        select count(distinct ce.id)
+        from cabinet_error ce
+        left join operation_ticket ot on ce.ticket_id = ot.id
+        where worker_id = #{workerId} and complete_status = 'error'
+          and DATE_SUB(CURRENT_DATE,INTERVAL #{month} month) &lt;= ot.create_time;
+    </select>
 
 </mapper>

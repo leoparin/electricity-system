@@ -5,14 +5,15 @@ import com.leo.electricitysystem.domain.User;
 import com.leo.electricitysystem.domain.dto.StatisticTransfer;
 import com.leo.electricitysystem.domain.request.StatisticRequest;
 import com.leo.electricitysystem.domain.response.ResponseResult;
-import com.leo.electricitysystem.mapper.TicketMapper;
-import com.leo.electricitysystem.mapper.UniformErrorMapper;
-import com.leo.electricitysystem.mapper.UserMapper;
+import com.leo.electricitysystem.domain.result.OperationErrorResponse;
+import com.leo.electricitysystem.domain.result.OperationErrorResult;
+import com.leo.electricitysystem.domain.result.OperationStatistics;
+import com.leo.electricitysystem.domain.result.UniformErrorResult;
+import com.leo.electricitysystem.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ClassName:StatisticService
@@ -34,52 +35,104 @@ public class StatisticService {
     //单个工人查询自己的统计结果
     public ResponseResult getUniformErrorNum(StatisticRequest request){
         //查用户身份
-        LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();
-        q.select(User::getUserType)
-                .eq(User::getId,request.getWorkerId());
-        String userType = userMapper.selectOne(q).getUserType();
-        //构建传输对象
-        StatisticTransfer transfer = new StatisticTransfer(request.getWorkerId(), request.getMonth(), userType);
+//        LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();
+//        q.select(User::getUserType)
+//                .eq(User::getId,request.getWorkerId());
+//        String userType = getUserTypeHelper(request.getWorkerId());
+//        //构建传输对象
+//        StatisticTransfer transfer = new StatisticTransfer(request.getWorkerId(), request.getMonth(), userType);
         //查询所有操作票
-        Integer totalTicketAmount = ticketMapper.getTicketAmountByWorkerIdAndTime(transfer);
-        //
+        Integer totalTicketAmount = ticketAmountHelper(request);
+
         Map<String,Integer> map = new HashMap<>();
         map.put("total_tickets",totalTicketAmount);
         //get error tickets
-        transfer.setStatus("error");
-        Integer errorTicketAmount = ticketMapper.getTicketAmountByWorkerIdAndTime(transfer);
+        //        transfer.setStatus("error");
+        //        Integer errorTicketAmount = ticketMapper.getTicketAmountByWorkerIdAndTime(transfer);
+        Integer errorTicketAmount = uniformErrorMapper.getUniformErrorTicketNum(request.getWorkerId(),request.getMonth());
         map.put("error_tickets",errorTicketAmount);
 
-        //get uniform error
+        //get uniform error list
+        List<UniformErrorResult> uniformErrorResults = uniformErrorMapper.
+                getUniformErrorByWorkerIdAndTime(request.getWorkerId(), request.getMonth());
+
+        Integer helmetError = 0;
+        Integer uniformError = 0;
+        Integer  glovesError = 0;
+
+        for(UniformErrorResult i:uniformErrorResults){
+            if(Objects.equals(i.getUniform(), "False"))uniformError++;
+            if(Objects.equals(i.getHelmet(), "False"))helmetError++;
+            if(Objects.equals(i.getGloves(), "False"))glovesError++;
+        }
+        map.put("helmet_error",helmetError);
+        map.put("dress_error",uniformError);
+        map.put("gloves_error",glovesError);
+
+        return new ResponseResult(200,"get Uniform statistics success",map);
+    }
+
+    String getUserTypeHelper(Long id){
+        //查用户身份
+        LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();
+        q.select(User::getUserType)
+                .eq(User::getId,id);
+        return userMapper.selectOne(q).getUserType();
+    }
+
+
+    @Autowired
+    CabinetErrorMapper cabinetErrorMapper;
+    public ResponseResult getCabinetErrorNum(StatisticRequest request) {
+//        //查询所有操作票
+//        String userType = getUserTypeHelper(request.getWorkerId());
+//        StatisticTransfer transfer = new StatisticTransfer(request.getWorkerId(), request.getMonth(), userType);
+        Integer totalTicketAmount = ticketAmountHelper(request);
+
+        //查询所有有操作柜错误的操作票数目
+        Integer amount = cabinetErrorMapper.getCabinetErrorTicketAmount(request.getMonth(),request.getWorkerId());
+        Map<String,Integer> map = new HashMap<>();
+        map.put("total_tickets",totalTicketAmount);
+        map.put("error_tickets",amount);
+
+        return new ResponseResult(200,"get cabinet error amount success",map);
+    }
+
+    Integer ticketAmountHelper(StatisticRequest request){
+        //查询所有操作票
+        String userType = getUserTypeHelper(request.getWorkerId());
+        StatisticTransfer transfer = new StatisticTransfer(request.getWorkerId(), request.getMonth(), userType);
+        return  ticketMapper.getTicketAmountByWorkerIdAndTime(transfer);
 
     }
-//        Map<String,Integer> map = new HashMap<>();
-//        //所有操作票数
-//        int totalTicketAmount  = ticketMapper.getTicketAmount(request);
-//
-//        map.put("total_tickets",totalTicketAmount);
-//        LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
-//        queryWrapper.eq(OperationTicket::getCompleteStatus,"error")
-//                .eq(OperationTicket::getWorkerId,request.getWorker_id());
-//        Integer errorTicketAmount  = Math.toIntExact(ticketMapper.selectCount(queryWrapper));
-//        map.put("error_tickets",errorTicketAmount);
-//        //get all Uniform error of specify worker
-////        List<UniformError> uniformErrorList = uniformErrorMapper.getUniformErrorByWorkerId(user.getId());
-//        Integer helmetError = 0;
-//        Integer uniformError = 0;
-//        Integer  gloversError = 0;
-//
-////        for(UniformError i:uniformErrorList){
-////            if(Objects.equals(i.getUniform(), "False"))uniformError++;
-////            if(Objects.equals(i.getHelmet(), "False"))helmetError++;
-////            if(Objects.equals(i.getGloves(), "False"))gloversError++;
-////        }
-//        map.put("helmet_error",helmetError);
-//        map.put("dress_error",uniformError);
-//        map.put("gloves_error",gloversError);
-//        return new ResponseResult(200,"get Uniform statistics success",map);
-//
-//    }
 
+    @Autowired
+    OperationErrorMapper operationErrorMapper;
+    public ResponseResult getOperationErrorNum(StatisticRequest request) {
+        Integer ticketAmount = ticketAmountHelper(request);
 
+        // ticket num which has operation error
+        Integer errorTicketAmount = operationErrorMapper.getOperationErrorAmount(request.getWorkerId(), request.getMonth());
+        Map<String,Integer> map = new HashMap<>();
+        List<OperationErrorResult> list = operationErrorMapper.getOperationErrorList(request.getWorkerId(), request.getMonth());
+
+        Integer operation1 = 0;
+        Integer operation2 = 0;
+        Integer operation3 = 0;
+        for(OperationErrorResult i : list){
+            if(i.getStepId() == 1L)operation1++;
+            if(i.getStepId() == 2L)operation2++;
+            if(i.getStepId() == 3L)operation3++;
+        }
+
+        List<OperationStatistics> resultList = new ArrayList<>();
+
+        resultList.add(0,new OperationStatistics("操作一",operation1));
+        resultList.add(1,new OperationStatistics("操作二",operation2));
+        resultList.add(2,new OperationStatistics("操作三",operation3));
+
+       return new ResponseResult(200,"get operation statistics success"
+               ,new OperationErrorResponse(ticketAmount,errorTicketAmount,resultList));
+
+    }
 }

@@ -1,9 +1,14 @@
 package com.leo.electricitysystem.unit;
 
+import com.alibaba.fastjson.JSON;
 import com.leo.electricitysystem.domain.OperationTicket;
 import com.leo.electricitysystem.domain.dto.StatisticTransfer;
 import com.leo.electricitysystem.domain.request.StatisticRequest;
+import com.leo.electricitysystem.domain.response.ResponseResult;
+import com.leo.electricitysystem.domain.result.UniformErrorResult;
 import com.leo.electricitysystem.mapper.TicketMapper;
+import com.leo.electricitysystem.mapper.UniformErrorMapper;
+import com.leo.electricitysystem.service.StatisticService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,4 +39,54 @@ public class StatisticTest {
 
     }
 
+    @Autowired
+    UniformErrorMapper uniformErrorMapper;
+    @Test
+    void selectUniformErrorTest(){
+        Long workerId = 3L;
+        Integer month = 3;
+
+        List<UniformErrorResult> list = uniformErrorMapper.getUniformErrorByWorkerIdAndTime(workerId,month);
+
+        System.out.println(list);
+    }
+
+
+    @Autowired
+    StatisticService statisticService;
+    @Test
+    void getUniformErrorNumTest(){
+        StatisticRequest request = new StatisticRequest(3,3L);
+
+        ResponseResult result = statisticService.getUniformErrorNum(request);
+        String json = JSON.toJSONString(result);
+        System.out.println(json);
+    }
+
+    @Test
+    void getUniformErrorTicketNum(){
+        Long workerId = 3L;
+        Integer month = 3;
+
+        Integer result = uniformErrorMapper.getUniformErrorTicketNum(workerId,month);
+        System.out.println(result);
+    }
+
+    @Test
+    void getCabinetErrorTicketNum(){
+        StatisticRequest request = new StatisticRequest(3,3L);
+
+        ResponseResult result = statisticService.getCabinetErrorNum(request);
+        String json = JSON.toJSONString(result);
+        System.out.println(json);
+    }
+
+    @Test
+    void getOperationErrorStatistics(){
+        StatisticRequest request = new StatisticRequest(3,1L);
+
+        ResponseResult result = statisticService.getOperationErrorNum(request);
+        String json = JSON.toJSONString(result);
+        System.out.println(json);
+    }
 }
