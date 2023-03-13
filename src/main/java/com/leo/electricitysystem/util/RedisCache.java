@@ -1,4 +1,4 @@
-package com.leo.electricitysystem.Utils;
+package com.leo.electricitysystem.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;

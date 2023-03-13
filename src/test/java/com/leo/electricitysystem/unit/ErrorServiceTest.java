@@ -6,7 +6,7 @@ import com.leo.electricitysystem.domain.OperationError;
 import com.leo.electricitysystem.domain.OperationStep;
 import com.leo.electricitysystem.domain.UniformError;
 import com.leo.electricitysystem.mapper.StepMapper;
-import com.leo.electricitysystem.domain.response.ResponseResult;
+import com.leo.electricitysystem.VO.ResponseResult;
 import com.leo.electricitysystem.mapper.UniformErrorMapper;
 import com.leo.electricitysystem.service.ErrorService;
 import org.junit.jupiter.api.DisplayName;

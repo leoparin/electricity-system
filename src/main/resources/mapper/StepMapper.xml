@@ -4,7 +4,7 @@
 
 <mapper namespace="com.leo.electricitysystem.mapper.StepMapper">
 
-    <select id="selectStepList" resultType="com.leo.electricitysystem.domain.result.StepResult">
+    <select id="selectStepList" resultType="com.leo.electricitysystem.VO.StepResult">
         select
             os.id,os.description, os.step_order,ss.switch_status,sl.switch_name,sl.switch_type
         from

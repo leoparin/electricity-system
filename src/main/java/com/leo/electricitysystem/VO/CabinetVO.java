@@ -1,4 +1,4 @@
-package com.leo.electricitysystem.domain.result;
+package com.leo.electricitysystem.VO;
 
 import com.leo.electricitysystem.domain.ElectricCabinet;
 import com.leo.electricitysystem.domain.Moniter;
@@ -15,7 +15,7 @@ import java.util.List;
  * @Author leo
  **/
 @Data
-public class CabinetResult {
+public class CabinetVO {
 
     Moniter moniter;
 

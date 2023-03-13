@@ -1,5 +1,5 @@
 package com.leo.electricitysystem.config;
-import com.leo.electricitysystem.Utils.FastJsonRedisSerializer;
+import com.leo.electricitysystem.util.FastJsonRedisSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

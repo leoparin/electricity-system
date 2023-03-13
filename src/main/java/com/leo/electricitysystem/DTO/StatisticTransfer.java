@@ -1,6 +1,5 @@
-package com.leo.electricitysystem.domain.dto;
+package com.leo.electricitysystem.DTO;
 
-import com.leo.electricitysystem.domain.request.StatisticRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

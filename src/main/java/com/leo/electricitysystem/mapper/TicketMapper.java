@@ -5,9 +5,8 @@ import com.leo.electricitysystem.domain.LoginUser;
 import com.leo.electricitysystem.domain.OperationStep;
 import com.leo.electricitysystem.domain.OperationTicket;
 import com.leo.electricitysystem.domain.StepSwitch;
-import com.leo.electricitysystem.domain.dto.StatisticTransfer;
-import com.leo.electricitysystem.domain.request.FullTicket;
-import com.leo.electricitysystem.domain.request.StatisticRequest;
+import com.leo.electricitysystem.DTO.StatisticTransfer;
+import com.leo.electricitysystem.DTO.FullTicket;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

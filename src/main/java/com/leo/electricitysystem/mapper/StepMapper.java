@@ -2,8 +2,7 @@ package com.leo.electricitysystem.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leo.electricitysystem.domain.OperationStep;
-import com.leo.electricitysystem.domain.StepSwitch;
-import com.leo.electricitysystem.domain.result.StepResult;
+import com.leo.electricitysystem.VO.StepResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

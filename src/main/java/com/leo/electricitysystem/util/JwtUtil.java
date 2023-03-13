@@ -1,4 +1,4 @@
-package com.leo.electricitysystem.Utils;
+package com.leo.electricitysystem.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;

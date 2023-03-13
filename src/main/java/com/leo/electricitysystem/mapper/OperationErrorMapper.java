@@ -2,7 +2,7 @@ package com.leo.electricitysystem.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leo.electricitysystem.domain.OperationError;
-import com.leo.electricitysystem.domain.result.OperationErrorResult;
+import com.leo.electricitysystem.VO.OperationErrorResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

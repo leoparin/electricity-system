@@ -1,4 +1,4 @@
-package com.leo.electricitysystem.domain.request;
+package com.leo.electricitysystem.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.leo.electricitysystem.controller;
 
-import com.leo.electricitysystem.domain.request.FullTicket;
-import com.leo.electricitysystem.domain.response.ResponseResult;
+import com.leo.electricitysystem.DTO.FullTicket;
+import com.leo.electricitysystem.VO.ResponseResult;
 import com.leo.electricitysystem.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

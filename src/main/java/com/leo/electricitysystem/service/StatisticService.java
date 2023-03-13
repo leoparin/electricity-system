@@ -2,13 +2,13 @@ package com.leo.electricitysystem.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.User;
-import com.leo.electricitysystem.domain.dto.StatisticTransfer;
-import com.leo.electricitysystem.domain.request.StatisticRequest;
-import com.leo.electricitysystem.domain.response.ResponseResult;
-import com.leo.electricitysystem.domain.result.OperationErrorResponse;
-import com.leo.electricitysystem.domain.result.OperationErrorResult;
-import com.leo.electricitysystem.domain.result.OperationStatistics;
-import com.leo.electricitysystem.domain.result.UniformErrorResult;
+import com.leo.electricitysystem.DTO.StatisticTransfer;
+import com.leo.electricitysystem.DTO.StatisticRequest;
+import com.leo.electricitysystem.VO.ResponseResult;
+import com.leo.electricitysystem.VO.OperationErrorResponse;
+import com.leo.electricitysystem.VO.OperationErrorResult;
+import com.leo.electricitysystem.VO.OperationStatistics;
+import com.leo.electricitysystem.VO.UniformErrorResult;
 import com.leo.electricitysystem.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,21 +34,11 @@ public class StatisticService {
     UserMapper userMapper;
     //单个工人查询自己的统计结果
     public ResponseResult getUniformErrorNum(StatisticRequest request){
-        //查用户身份
-//        LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();
-//        q.select(User::getUserType)
-//                .eq(User::getId,request.getWorkerId());
-//        String userType = getUserTypeHelper(request.getWorkerId());
-//        //构建传输对象
-//        StatisticTransfer transfer = new StatisticTransfer(request.getWorkerId(), request.getMonth(), userType);
-        //查询所有操作票
         Integer totalTicketAmount = ticketAmountHelper(request);
 
         Map<String,Integer> map = new HashMap<>();
         map.put("total_tickets",totalTicketAmount);
-        //get error tickets
-        //        transfer.setStatus("error");
-        //        Integer errorTicketAmount = ticketMapper.getTicketAmountByWorkerIdAndTime(transfer);
+        //get error ticket
         Integer errorTicketAmount = uniformErrorMapper.getUniformErrorTicketNum(request.getWorkerId(),request.getMonth());
         map.put("error_tickets",errorTicketAmount);
 

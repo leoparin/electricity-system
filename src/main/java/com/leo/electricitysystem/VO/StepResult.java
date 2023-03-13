@@ -1,4 +1,4 @@
-package com.leo.electricitysystem.domain.result;
+package com.leo.electricitysystem.VO;
 
 import lombok.Data;
 

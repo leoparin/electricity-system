@@ -2,8 +2,8 @@ package com.leo.electricitysystem.unit;
 
 import com.alibaba.fastjson.JSON;
 import com.leo.electricitysystem.domain.StepSwitch;
-import com.leo.electricitysystem.domain.request.FullTicket;
-import com.leo.electricitysystem.domain.response.ResponseResult;
+import com.leo.electricitysystem.DTO.FullTicket;
+import com.leo.electricitysystem.VO.ResponseResult;
 import com.leo.electricitysystem.service.TicketService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

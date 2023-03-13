@@ -3,7 +3,7 @@ package com.leo.electricitysystem.functionality;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leo.electricitysystem.domain.StepSwitch;
 import com.leo.electricitysystem.mapper.TicketMapper;
-import com.leo.electricitysystem.domain.request.FullTicket;
+import com.leo.electricitysystem.DTO.FullTicket;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

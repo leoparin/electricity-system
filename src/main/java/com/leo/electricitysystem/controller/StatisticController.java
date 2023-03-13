@@ -1,7 +1,7 @@
 package com.leo.electricitysystem.controller;
 
-import com.leo.electricitysystem.domain.request.StatisticRequest;
-import com.leo.electricitysystem.domain.response.ResponseResult;
+import com.leo.electricitysystem.DTO.StatisticRequest;
+import com.leo.electricitysystem.VO.ResponseResult;
 import com.leo.electricitysystem.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

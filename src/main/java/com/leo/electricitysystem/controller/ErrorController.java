@@ -3,7 +3,7 @@ package com.leo.electricitysystem.controller;
 import com.leo.electricitysystem.domain.CabinetError;
 import com.leo.electricitysystem.domain.OperationError;
 import com.leo.electricitysystem.domain.UniformError;
-import com.leo.electricitysystem.domain.response.ResponseResult;
+import com.leo.electricitysystem.VO.ResponseResult;
 import com.leo.electricitysystem.service.ErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

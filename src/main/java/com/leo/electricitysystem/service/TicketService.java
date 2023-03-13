@@ -2,12 +2,12 @@ package com.leo.electricitysystem.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leo.electricitysystem.domain.*;
-import com.leo.electricitysystem.domain.result.CabinetResult;
-import com.leo.electricitysystem.domain.result.StepResult;
+import com.leo.electricitysystem.VO.CabinetVO;
+import com.leo.electricitysystem.VO.StepResult;
 import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.mapper.*;
-import com.leo.electricitysystem.domain.request.FullTicket;
-import com.leo.electricitysystem.domain.response.ResponseResult;
+import com.leo.electricitysystem.DTO.FullTicket;
+import com.leo.electricitysystem.VO.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
@@ -241,7 +241,7 @@ public class TicketService {
         List<ElectricCabinet> cabinets = cabinetMapper.selectList(queryWrapper);
         Moniter moniter = moniterMapper.selectById(cabinet.getMonitorId());
 
-        CabinetResult result = new CabinetResult();
+        CabinetVO result = new CabinetVO();
         result.setCabinets(cabinets);
         result.setMoniter(moniter);
 

@@ -1,11 +1,10 @@
 package com.leo.electricitysystem.unit;
 
 import com.alibaba.fastjson.JSON;
-import com.leo.electricitysystem.domain.OperationTicket;
-import com.leo.electricitysystem.domain.dto.StatisticTransfer;
-import com.leo.electricitysystem.domain.request.StatisticRequest;
-import com.leo.electricitysystem.domain.response.ResponseResult;
-import com.leo.electricitysystem.domain.result.UniformErrorResult;
+import com.leo.electricitysystem.DTO.StatisticTransfer;
+import com.leo.electricitysystem.DTO.StatisticRequest;
+import com.leo.electricitysystem.VO.ResponseResult;
+import com.leo.electricitysystem.VO.UniformErrorResult;
 import com.leo.electricitysystem.mapper.TicketMapper;
 import com.leo.electricitysystem.mapper.UniformErrorMapper;
 import com.leo.electricitysystem.service.StatisticService;
@@ -35,8 +34,6 @@ public class StatisticTest {
         StatisticTransfer transfer = new StatisticTransfer(request.getWorkerId(),request.getMonth(),"工人","error");
         Integer result = ticketMapper.getTicketAmountByWorkerIdAndTime(transfer);
         System.out.println(result);
-
-
     }
 
     @Autowired

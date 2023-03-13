@@ -1,7 +1,6 @@
-package com.leo.electricitysystem.domain.utils;
+package com.leo.electricitysystem.exception;
 
-import com.leo.electricitysystem.exception.IdNotFoundException;
-import com.leo.electricitysystem.domain.response.ResponseResult;
+import com.leo.electricitysystem.VO.ResponseResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

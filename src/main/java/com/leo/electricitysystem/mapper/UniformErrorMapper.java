@@ -2,7 +2,7 @@ package com.leo.electricitysystem.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leo.electricitysystem.domain.UniformError;
-import com.leo.electricitysystem.domain.result.UniformErrorResult;
+import com.leo.electricitysystem.VO.UniformErrorResult;
 import org.apache.ibatis.annotations.MapKey;
 import org.springframework.stereotype.Repository;
 
