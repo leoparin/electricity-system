@@ -4,8 +4,8 @@
 
 <mapper namespace="com.leo.electricitysystem.mapper.OperationErrorMapper">
     <insert id="insertOperationError">
-        INSERT INTO operation_error(ticket_id,need_procedure,actual_procedure,create_time,update_time,img,result)
-        VALUES (#ticket_id,#needProcedure, #actualProcedure, CURRENT_TIME(),CURRENT_TIME(),#img,#result);
+        INSERT INTO operation_error(step_id,need_procedure,actual_procedure,create_time,update_time,img,result)
+        VALUES (#{stepId},#{needProcedure}, #{actualProcedure}, CURRENT_TIME(),CURRENT_TIME(),#{img},#{result});
     </insert>
 
     <select id="getOperationErrorList" resultType="com.leo.electricitysystem.VO.OperationErrorResult">

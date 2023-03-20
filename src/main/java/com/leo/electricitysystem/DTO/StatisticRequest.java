@@ -2,6 +2,7 @@ package com.leo.electricitysystem.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * ClassName:StatisticRequest
@@ -13,10 +14,12 @@ import lombok.Data;
  **/
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class StatisticRequest {
 
     Integer month;
 
     Long  workerId;
+
 
 }

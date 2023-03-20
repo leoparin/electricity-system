@@ -4,6 +4,7 @@ import com.leo.electricitysystem.domain.OperationStep;
 import com.leo.electricitysystem.domain.StepSwitch;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
  **/
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class FullTicket {
 
     Long ticketId;
@@ -41,10 +43,6 @@ public class FullTicket {
 
     Long cabinetId;
 
-    List<String> Steps;
-
-    //写一个switchstep表对象，List map
-    List<StepSwitch> stepSwitch;
-
+    List<OperationStep> steps;
 
 }

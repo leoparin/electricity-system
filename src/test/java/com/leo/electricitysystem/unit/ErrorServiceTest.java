@@ -32,7 +32,7 @@ public class ErrorServiceTest {
 
     @Test
     void selectUniformErrorByIdTest(){
-        Long id = 2L;
+        Long id = 1L;
         ResponseResult result = errorService.getUniformErrorByTicketId(id);
         String json = JSON.toJSONString(result);
         System.out.println(json);
@@ -57,7 +57,7 @@ public class ErrorServiceTest {
 
     @Test
     void selectCabinetErrorByWorkerIdTest(){
-        Long id = 2L;
+        Long id = 3L;
         ResponseResult result = errorService.getCabinetErrorByTicketId(id);
     }
 
@@ -75,7 +75,7 @@ public class ErrorServiceTest {
         OperationError error = new OperationError(null,"True",40L,
                 "远方接地开关切换至远方","远方接地开关切换至远方","abcdg");
 
-        ResponseResult result = errorService.saveOperationError(error);
+         ResponseResult result = errorService.saveOperationError(error);
         String json = JSON.toJSONString(result);
         System.out.println(json);
 
@@ -88,7 +88,7 @@ public class ErrorServiceTest {
     UniformErrorMapper uniformErrorMapper;
     @Test
     void insertUniformErrorTest(){
-        UniformError error =  new UniformError(18L,"True",
+        UniformError error =  new UniformError(18L,20L,"True",
                 "True","True","True","abcl");
         int flag = uniformErrorMapper.insertUniformError(error);
         System.out.println(flag);

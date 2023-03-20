@@ -17,5 +17,5 @@ import java.util.List;
  **/
 @Repository
 public interface StepMapper extends BaseMapper<OperationStep> {
-    List<StepResult> selectStepList(Long ticketId);
+//    List<StepResult> selectStepList(Long ticketId);
 }

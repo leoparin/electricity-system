@@ -18,14 +18,8 @@
             select last_insert_id()
         </selectKey>
         -- 插入步骤
-        INSERT into operation_steps(description,step_order,ticket_id)
-        VALUES (#{description},#{stepOrder},#{ticketId})
-    </insert>
-
-    <insert id="insertSwitch" useGeneratedKeys="true">
-        -- 插入步骤
-        INSERT into step_switch(step_id,switch_id,switch_status,step_order)
-        VALUES (#{stepId},#{switchId},#{switchStatus},#{stepOrder})
+        INSERT into operation_steps(description,step_order,ticket_id,switch_id,switch_status)
+        VALUES (#{description},#{stepOrder},#{ticketId},#{switchId},#{switchStatus})
     </insert>
 
 
@@ -33,11 +27,11 @@
         -- 根据用户id分页查询操作票（管理员，工人）
         SELECT * from operation_ticket
         <choose>
-        <when test="loginUser.userType == '工人'">
-            where #{loginUser.id} = worker_id
+        <when test="loginUser.user.userType == '工人'">
+            where #{loginUser.user.id} = worker_id
         </when>
         <otherwise>
-            where #{loginUser.id} = admin_id
+            where #{loginUser.user.id} = admin_id
         </otherwise>
         </choose>
         LIMIT #{offset},#{pageSize};
@@ -47,18 +41,18 @@
         -- 根据user类型以及id查看当前账户的ticket数目
         SELECT count(*) from operation_ticket
         <choose>
-            <when test="loginUser.userType == '工人'">
-                where #{loginUser.id} = worker_id;
+            <when test="loginUser.getUser().getUserType() == '工人'">
+                where #{loginUser.user.id} = worker_id;
             </when>
             <otherwise>
-                where #{loginUser.id} = admin_id;
+                where #{loginUser.user.id} = admin_id;
             </otherwise>
         </choose>
     </select>
 
 
     <select id = "getTicketAmountByWorkerIdAndTime" resultType="java.lang.Integer">
-        --   查询某个worker的全部操作票和错误操作票数目
+        --   查询某个worker的全部操作票和错误操作票数目，并按照日期筛选
         SELECT count(*)
         from operation_ticket
         <choose>
@@ -73,5 +67,31 @@
             and complete_status = #{statisticTransfer.status}
         </if>
           and DATE_SUB(CURRENT_DATE(),INTERVAL #{statisticTransfer.month} month) &lt;= create_time;
+    </select>
+
+    <select id="optionalSelect" resultType="com.leo.electricitysystem.domain.OperationTicket">
+        -- 条件查询操作票
+        select  *
+        from operation_ticket
+        <where>
+            <if test = "dto.cabinetId != null">
+                and #{dto.cabinetId} = cabinet_id
+            </if>
+            <if test = "dto.createTime != null">
+                and #{dto.createTime} = create_time
+            </if>
+            <if test = "dto.completeTime != null">
+                and #{dto.completeTime} = compelete_time
+            </if>
+            <if test = "dto.taskName != null">
+                and #{dto.taskName} = task_name
+            </if>
+            <if test = "dto.workerId != null">
+                and #{dto.workerId} = worker_id
+            </if>
+            <if test = "dto.supervisorName != null">
+                and #{dto.supervisorName} = supervisor_name
+            </if>
+        </where>
     </select>
 </mapper>

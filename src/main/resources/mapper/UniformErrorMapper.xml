@@ -26,7 +26,7 @@
     </select>
 
     <select id="getUniformErrorTicketNum" resultType="java.lang.Integer">
-        select count(distinct ue.create_time)
+        select count(distinct ue.ticket_id)
         from worker_uniform_error_view ue
         where ue.worker_id = #{id}
           and DATE_SUB(CURRENT_DATE(),INTERVAL #{month} month) &lt;= create_time;

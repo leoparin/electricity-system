@@ -1,6 +1,8 @@
 package com.leo.electricitysystem.functionality;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leo.electricitysystem.DTO.OptionDTO;
+import com.leo.electricitysystem.domain.OperationStep;
 import com.leo.electricitysystem.domain.StepSwitch;
 import com.leo.electricitysystem.mapper.TicketMapper;
 import com.leo.electricitysystem.DTO.FullTicket;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -46,18 +49,39 @@ public class AdminTicketTest {
     @DisplayName("管理员写入操作票")
     void writeTicketHappyFlow() throws Exception {
         //mock a fullTicket
-        List<String> steps = List.of(
-                "将10kV××线***开关的 “远方/就地” 切换开关切换至就地位置，查确己在就地位置",
-                "断开 10kV××线***开关。",
-                "查10kV××线***开关机械位置指示及开关分合闸指示确在断开位置，电流表指示无电流，带电显示器指示确无带电");
-        List<StepSwitch> switches = List.of(
-                new StepSwitch(null,null,1L,1,"就地"),
-                new StepSwitch(null,null,2L,1,"无带电"),
-                new StepSwitch(null,null,3L,2,"balabala")
-                );
-        FullTicket ticket = new FullTicket(null,"10kV××线***开关由运行转检修",
-                "leo","Josh",1L,3L,"王武",
-                "2023-01-10 21:06:28","2023-01-10 21:06:28",1L,steps,switches);
+        FullTicket ticket = new FullTicket();
+        ticket.setTicketId(1001L);
+        ticket.setTaskName("给水泵开启");
+        ticket.setAdminName("admin");
+        ticket.setAdminId(100L);
+        ticket.setWorkerName("张三");
+        ticket.setWorkerId(101L);
+        ticket.setSupervisorName("李四");
+        ticket.setCreateTime("2021-10-01 09:00:00");
+        ticket.setCompleteTime("2021-10-01 10:00:00");
+        ticket.setCabinetId(201L);
+
+        List<OperationStep> stepList = new ArrayList<>();
+
+        OperationStep step1 = new OperationStep(1, "打开进水阀", 1001L);
+        step1.setSwitchId(101L);
+        step1.setSwitchStatus("开");
+        step1.setCompleteStatus("已完成");
+        stepList.add(step1);
+
+        OperationStep step2 = new OperationStep(2, "打开泵开关", 1001L);
+        step2.setSwitchId(102L);
+        step2.setSwitchStatus("开");
+        step2.setCompleteStatus("已完成");
+        stepList.add(step2);
+
+        OperationStep step3 = new OperationStep(3, "调节出水量", 1001L);
+        step3.setSwitchId(103L);
+        step3.setSwitchStatus("开");
+        step3.setCompleteStatus("已完成");
+        stepList.add(step3);
+
+        ticket.setSteps(stepList);
 
         mockMvc.perform(
                 post("/ticket/")
@@ -70,22 +94,22 @@ public class AdminTicketTest {
                 );
     }
 
-    @Test
-    @DisplayName("管理员写入操作票失败")
-    void writeTicketFail() throws Exception {
-        List<String> steps = List.of(
-                "将10kV××线***开关的 “远方/就地” 切换开关切换至就地位置，查确己在就地位置",
-                "断开 10kV××线***开关。",
-                "查10kV××线***开关机械位置指示及开关分合闸指示确在断开位置，电流表指示无电流，带电显示器指示确无带电");
-        List<StepSwitch> switches = List.of(
-                new StepSwitch(null,null,1L,1,"就地"),
-                new StepSwitch(null,null,2L,1,"无带电"),
-                new StepSwitch(null,null,3L,2,"balabala")
-                );
-        FullTicket ticket = new FullTicket(null,"10kV××线***开关由运行转检修",
-                "leo","Josh",1L,3L,"王武",
-                "2023-01-10 21:06:28","2023-01-10 21:06:28",2L,steps,switches);
-    }
+//    @Test
+//    @DisplayName("管理员写入操作票失败")
+//    void writeTicketFail() throws Exception {
+//        List<String> steps = List.of(
+//                "将10kV××线***开关的 “远方/就地” 切换开关切换至就地位置，查确己在就地位置",
+//                "断开 10kV××线***开关。",
+//                "查10kV××线***开关机械位置指示及开关分合闸指示确在断开位置，电流表指示无电流，带电显示器指示确无带电");
+//        List<StepSwitch> switches = List.of(
+//                new StepSwitch(null,null,1L,1,"就地"),
+//                new StepSwitch(null,null,2L,1,"无带电"),
+//                new StepSwitch(null,null,3L,2,"balabala")
+//                );
+//        FullTicket ticket = new FullTicket(null,"10kV××线***开关由运行转检修",
+//                "leo","Josh",1L,3L,"王武",
+//                "2023-01-10 21:06:28","2023-01-10 21:06:28",2L,steps,switches);
+//    }
 
 
     @Test
@@ -133,7 +157,7 @@ public class AdminTicketTest {
     @Test
     @DisplayName("根据id删除操作票")
     void deleteTicketById() throws Exception {
-        mockMvc.perform(delete("/ticket/17"))
+        mockMvc.perform(delete("/ticket/55"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.code").value(200),
@@ -190,7 +214,7 @@ public class AdminTicketTest {
     @Test
     @DisplayName("分页查询ticket失败")
     void getTicketPageFail() throws Exception {
-        mockMvc.perform(get("/ticket/page/1"))
+        mockMvc.perform(get("/ticket/page/100"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.msg").value("get page fail,do not have enough ticket")
@@ -238,6 +262,25 @@ public class AdminTicketTest {
                         status().isOk(),
                         jsonPath("$.msg").value("get ticket success")
                 );
+    }
+
+    @Test
+    @DisplayName("条件查询操作票")
+    void getTicketByOption() throws Exception {
+        OptionDTO option1 = new OptionDTO();
+//        option1.setCreateTime("2023-01-03 10:22:30");
+        option1.setTaskName("10kV××线***开关由运行转检修");
+        option1.setWorkerId(3L);
+        option1.setSupervisorName("王武");
+
+        mockMvc.perform(get("/ticket/select")
+                .content(new ObjectMapper().writeValueAsString(option1))
+                .header(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON)
+                )
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.msg").value("get ticket success")
+                        );
     }
 
 }

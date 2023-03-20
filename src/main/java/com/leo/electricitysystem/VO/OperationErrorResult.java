@@ -12,6 +12,7 @@ import lombok.Data;
  **/
 @Data
 public class OperationErrorResult {
+
     Long ticketId;
 
     Long workerId;
@@ -22,4 +23,5 @@ public class OperationErrorResult {
 
     String errorCreateTime;
 
+    Integer stepOrder;
 }

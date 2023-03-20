@@ -1,9 +1,10 @@
 package com.leo.electricitysystem.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.leo.electricitysystem.DTO.OptionDTO;
+import com.leo.electricitysystem.VO.WorkerInfoVO;
 import com.leo.electricitysystem.domain.*;
 import com.leo.electricitysystem.VO.CabinetVO;
-import com.leo.electricitysystem.VO.StepResult;
 import com.leo.electricitysystem.exception.IdNotFoundException;
 import com.leo.electricitysystem.mapper.*;
 import com.leo.electricitysystem.DTO.FullTicket;
@@ -11,6 +12,9 @@ import com.leo.electricitysystem.VO.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -102,19 +106,12 @@ public class TicketService {
     public ResponseResult saveTicket(FullTicket fullTicket){
         ticketMapper.insertTicket(fullTicket);
         //select key 会把主键放在model的主键中
-        List<String> steps = fullTicket.getSteps();
-        List<StepSwitch> switches= fullTicket.getStepSwitch();
-        for(int i = 1;i<=steps.size();i++){
-            OperationStep step = new OperationStep(i, steps.get(i - 1),fullTicket.getTicketId());
+        List<OperationStep> steps = fullTicket.getSteps();
+        Long ticketId = fullTicket.getTicketId();
+        for(int i = 0;i<steps.size();i++){
+            OperationStep step = steps.get(i);
+            step.setTicketId(ticketId);
             ticketMapper.insertSteps(step);
-            //如果stepOrder = 当前stepOrder则继续循环
-            for( int j = i; j<=switches.size();j++) {
-                StepSwitch stepSwitch = switches.get(j-1);
-                if (switches.get(j-1).getStepOrder() == i)
-                    ticketMapper.insertSwitch(new StepSwitch(null, step.getId(), stepSwitch.getSwitchId(),
-                            stepSwitch.getStepOrder(), stepSwitch.getSwitchStatus()));
-                else break;
-            }
         }
 
         //TODO: 插入失败处理
@@ -131,20 +128,15 @@ public class TicketService {
         //todo:page size metadata
         //TODO: 做登陆的时候改成从contextHolder里面取授权对象
         //todo：这里工人是硬编码的
-        LoginUser user = new LoginUser(3L,"王三" , "工人");
-        //从数据库查询
-//        LambdaQueryWrapper<OperationTicket> queryWrapper = new LambdaQueryWrapper<>();
-//
-//        queryWrapper.select(OperationTicket::getCreateTime,OperationTicket::getId,OperationTicket::getAdminId,
-//                OperationTicket::getWorkerId);
-//        List<OperationTicket> result = ticketMapper.selectList(queryWrapper);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         int pageSize = 3;
         int offset = currentPage * 5;
-        List<OperationTicket> result= ticketMapper.selectTicketPageByUserID(offset,user,pageSize);
+        List<OperationTicket> result= ticketMapper.selectTicketPageByUserID(offset,loginUser,pageSize);
         if(result.size()==0){
             throw new IdNotFoundException("get page fail,do not have enough ticket");
-        }//TODO: 修改throws
+        }
         return new ResponseResult(HttpStatus.OK.value(),"get page success",result);
     }
 
@@ -157,18 +149,15 @@ public class TicketService {
      */
     public ResponseResult getTicketSteps(Long ticketId){
         //前端返回选择了哪张ticket
-//        LambdaQueryWrapper<OperationStep> queryWrapper = new LambdaQueryWrapper<>();
-//
-//        //select stepOrder,description,step id,complete status from step table
-//        queryWrapper.select(OperationStep::getStepOrder,OperationStep::getDescription,
-//                OperationStep::getId,OperationStep::getCompleteStatus)
-//                .eq(OperationStep::getTicketId,ticketId)
-//                .orderByAsc(OperationStep::getStepOrder);
+        LambdaQueryWrapper<OperationStep> queryWrapper = new LambdaQueryWrapper<>();
+        //select stepOrder,description,step id,complete status from step table
+        queryWrapper.eq(OperationStep::getTicketId,ticketId)
+                .orderByAsc(OperationStep::getStepOrder);
 
 //        Map<Integer, OperationStep> steps = stepMapper.selectList(queryWrapper)
 //                .stream().collect(Collectors.toMap(OperationStep::getStepOrder, Function.identity()));
-        List<StepResult> steps = stepMapper.selectStepList(ticketId);
-        //return list of step Map
+        List<OperationStep> steps = stepMapper.selectList(queryWrapper);
+        //return list of step
         //根据ticket查step表
         if(steps.size()==0){
             throw new IdNotFoundException("get steps fail,ticket does not exist");
@@ -202,8 +191,9 @@ public class TicketService {
 
     public ResponseResult getTicketAmount() {
             //TODO:context holder
-        LoginUser user = new LoginUser(1L,"leo" , "管理员");
-        int result = ticketMapper.selectTicketAmount(user);
+        User user = new User(1L,"leo" , "管理员");
+        LoginUser loginUser = new LoginUser(user);
+        int result = ticketMapper.selectTicketAmount(loginUser);
         if(result==0){
             throw new IdNotFoundException("no ticket in current account");
         }
@@ -249,5 +239,33 @@ public class TicketService {
             throw new IdNotFoundException("监控和操作柜不存在");
         }
         return new ResponseResult(HttpStatus.OK.value(), "get cabinet and monitor success",result);
+    }
+
+    public ResponseResult getWorkerInfo(Long id) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(User::getRegion,User::getUserName)
+                .eq(User::getId,id);
+        User info = userMapper.selectOne(queryWrapper);
+        WorkerInfoVO vo = new WorkerInfoVO(info.getUserName(), info.getRegion());
+        return new ResponseResult(200,"get WorkerInfo success",vo);
+    }
+
+    public ResponseResult optionalSelect(OptionDTO dto) {
+        List<OperationTicket> ticketList = ticketMapper.optionalSelect(dto);
+
+        return new ResponseResult(200,"get ticket success",ticketList);
+    }
+
+    /**
+     * 批量删除
+     * @param ticketList
+     * @return msg
+     */
+    public ResponseResult deleteBatchTicket(List<Long> ticketList) {
+        int flag = ticketMapper.deleteBatchIds(ticketList);
+        if(flag == 0){
+            throw new IdNotFoundException("删除失败");
+        }
+        return new ResponseResult(200,"批量删除成功");
     }
 }

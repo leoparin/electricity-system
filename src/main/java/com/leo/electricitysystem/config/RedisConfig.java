@@ -17,7 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 
 @Configuration
-
+@SuppressWarnings({"unchecked","rawtypes"})
 public class RedisConfig {
 
     @Bean

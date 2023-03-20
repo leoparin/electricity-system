@@ -27,7 +27,7 @@ public class OperationStep {
     private String description;
 
     /*
-     * 所属操作票idp
+     * 所属操作票id
      */
     private Long ticketId;
 
@@ -35,6 +35,10 @@ public class OperationStep {
      * 步骤序号
      */
     private int stepOrder;
+
+    private Long switchId;
+
+    private String switchStatus;
 
     /*
      * 操作状态：未完成，错误，已完成

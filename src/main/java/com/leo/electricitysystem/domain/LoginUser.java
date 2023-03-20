@@ -2,6 +2,7 @@ package com.leo.electricitysystem.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,17 +17,13 @@ import java.util.Collection;
  * @Author leo
  **/
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public class LoginUser implements UserDetails {
 
-    private Long id;
+    private User user;
 
-    private String userName;
-
-    private String userType;
-
-    public LoginUser(Long id){
-        this.id = id;
+    public LoginUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -37,12 +34,12 @@ public class LoginUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userName;
+        return user.getUserName();
     }
 
     @Override

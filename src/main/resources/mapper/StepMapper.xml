@@ -4,14 +4,13 @@
 
 <mapper namespace="com.leo.electricitysystem.mapper.StepMapper">
 
-    <select id="selectStepList" resultType="com.leo.electricitysystem.VO.StepResult">
-        select
-            os.id,os.description, os.step_order,ss.switch_status,sl.switch_name,sl.switch_type
-        from
-            operation_steps os
-                left join  step_switch ss on os.id = ss.step_id
-                left join  switches_light sl on ss.switch_id = sl.id
-        where os.ticket_id = #{ticketId};
-    </select>
+<!--    <select id="selectStepList" resultType="com.leo.electricitysystem.VO.StepResult">-->
+<!--        select-->
+<!--            os.id,os.description, os.step_order,ss.switch_status,sl.switch_name,sl.switch_type-->
+<!--        from-->
+<!--            operation_steps os-->
+<!--                left join  switches_light sl on os.switch_id = sl.id-->
+<!--        where os.ticket_id = #{ticketId};-->
+<!--    </select>-->
 
 </mapper>

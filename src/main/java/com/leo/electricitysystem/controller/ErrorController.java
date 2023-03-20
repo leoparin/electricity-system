@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  **/
 @RestController
 @RequestMapping("/error")
-public class ErrorController {
+public class   ErrorController {
 
     @Autowired
     private ErrorService errorService;

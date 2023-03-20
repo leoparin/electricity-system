@@ -53,10 +53,7 @@ public class User {
      * 手机号
      */
     private String phonenumber;
-    /**
-     * 用户性别（0男，1女，2未知）
-     */
-    private String sex;
+
     /**
      * 头像
      */
@@ -65,18 +62,12 @@ public class User {
      * 用户类型（0管理员，1工人，3监督员）
      */
     private String userType;
-    /**
-     * 创建人的用户id
-     */
-    private Long createBy;
+
     /**
      * 创建时间
      */
     private Date createTime;
-    /**
-     * 更新人
-     */
-    private Long updateBy;
+
     /**
      * 更新时间
      */
@@ -85,4 +76,19 @@ public class User {
      * 删除标志（0代表未删除，1代表已删除）
      */
     private Integer delFlag;
+
+    private String region;
+
+    public User(long id, String userName, String userType) {
+        this.setUserType(userType);
+        this.setId(id);
+        this.setUserName(userName);
+    }
+
+    public User(String userName, String passwd, String region, String userType) {
+        this.userName = userName;
+        this.password = passwd;
+        this.region = region;
+        this.userType = userType;
+    }
 }

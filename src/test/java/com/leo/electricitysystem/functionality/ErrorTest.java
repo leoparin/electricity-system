@@ -50,7 +50,7 @@ class ErrorTest {
     @Test
     @DisplayName("根据ticketId查询操作柜错误")
     void getCabinetErrorByTicketId() throws Exception {
-        mockMvc.perform(get("/error/cabinet/2"))
+        mockMvc.perform(get("/error/cabinet/1"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.msg").value("get cabinet error success")

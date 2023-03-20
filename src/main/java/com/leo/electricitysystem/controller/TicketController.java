@@ -1,10 +1,13 @@
 package com.leo.electricitysystem.controller;
 
 import com.leo.electricitysystem.DTO.FullTicket;
+import com.leo.electricitysystem.DTO.OptionDTO;
 import com.leo.electricitysystem.VO.ResponseResult;
 import com.leo.electricitysystem.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * ClassName:TicketController
@@ -72,7 +75,7 @@ public class TicketController {
      */
     @GetMapping("/status/{status}")
     public ResponseResult getTicketByStatus(@PathVariable  String status){
-        return ticketService.getTicketByStatus(status);//todo:分页
+        return ticketService.getTicketByStatus(status);
     }
 
     /**
@@ -127,4 +130,26 @@ public class TicketController {
     public ResponseResult getCabinetList(@PathVariable Long cabinetId){
         return ticketService.getCabinetAndMoniter(cabinetId);
     }
+
+
+    /*
+     * 选择查询
+     */
+    @GetMapping("/select")
+    public ResponseResult getTicketByChoice(@RequestBody OptionDTO dto){
+        return ticketService.optionalSelect(dto);
+    }
+
+    @GetMapping("/workerInfo/{id}")
+    public ResponseResult getWorkerInfo(@PathVariable Long id){
+        return ticketService.getWorkerInfo(id);
+    }
+
+    @DeleteMapping("/delmultiple")
+    public ResponseResult deleteBatchTicket(@RequestBody List<Long> ticketList){
+        return ticketService.deleteBatchTicket(ticketList);
+
+    }
 }
+
+
